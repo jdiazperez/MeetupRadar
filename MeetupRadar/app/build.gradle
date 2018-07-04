@@ -29,4 +29,13 @@ dependencies {
     compile 'com.android.support:design:26.1.0'
     implementation 'com.android.support:support-annotations:27.1.1'
     implementation group: 'com.backendless', name: 'backendless', version: '4.4.0'
+    implementation 'com.google.android.gms:play-services:12.0.1'
+    compile 'org.jsoup:jsoup:1.11.2'
+    compile "io.reactivex.rxjava2:rxjava:2.1.9"
+    compile 'com.squareup.retrofit2:retrofit:2.3.0'
+    compile 'com.squareup.retrofit2:converter-gson:2.3.0'
+    compile 'com.squareup.retrofit2:adapter-rxjava2:+'
+    compile 'com.google.code.gson:gson:2.8.2'
+    compile 'com.squareup.okhttp3:okhttp:3.9.1'
+    compile 'javax.annotation:jsr250-api:1.0'
 }
