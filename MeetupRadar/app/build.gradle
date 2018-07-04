@@ -28,4 +28,5 @@ dependencies {
     //
     compile 'com.android.support:design:26.1.0'
     implementation 'com.android.support:support-annotations:27.1.1'
+    implementation group: 'com.backendless', name: 'backendless', version: '4.4.0'
 }

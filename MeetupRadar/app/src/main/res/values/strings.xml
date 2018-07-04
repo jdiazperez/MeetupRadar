@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">MeetupRadar</string>
+    <string name="APPLICATION_ID">DA375277-4F3A-1033-FF99-C6D369DDED00</string>
+    <string name="API_KEY">F3A202EA-DCD6-8A66-FFCC-E5064EF6D100</string>
+    <string name="SERVER_URL">https://api.backendless.com</string>
     <string name="usuario">MeetupRadar</string>
 </resources>

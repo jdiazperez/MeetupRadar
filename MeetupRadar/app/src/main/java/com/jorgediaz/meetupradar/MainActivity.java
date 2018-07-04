@@ -1,5 +1,8 @@
 package com.jorgediaz.meetupradar;
 
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -7,6 +10,11 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
+import android.widget.TextView;
+
+import com.backendless.Backendless;
+import com.backendless.async.callback.AsyncCallback;
+import com.backendless.exceptions.BackendlessFault;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -28,6 +36,12 @@ public class MainActivity extends AppCompatActivity {
 
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         navView = (NavigationView) findViewById(R.id.navview);
+
+        TextView headerEmail = (TextView) navView.getHeaderView(0).findViewById(R.id.headerEmail);
+        SharedPreferences sharedPref = getSharedPreferences(
+                getString(R.string.APPLICATION_ID), Context.MODE_PRIVATE);
+        headerEmail.setText(sharedPref.getString("emailUsuario", "Usuario"));
+
         navView.setNavigationItemSelectedListener(
                 new NavigationView.OnNavigationItemSelectedListener() {
                     @Override
@@ -50,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
                                 fragmentTransaction = true;
                                 break;
                             case R.id.menu_cerrar_sesion:
-                                Log.e("NavigationView", "Pulsado Cerrar Sesión");
+                                cerrarSesion();
                                 break;
                         }
 
@@ -68,5 +82,20 @@ public class MainActivity extends AppCompatActivity {
                         return true;
                     }
                 });
+    }
+
+    public void cerrarSesion() {
+        Backendless.UserService.logout(new AsyncCallback<Void>() {
+            @Override
+            public void handleResponse(Void response) {
+                Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                startActivity(intent);
+            }
+
+            @Override
+            public void handleFault(BackendlessFault fault) {
+                Log.e("logout", "Error: " + fault.getCode() + ": " + fault.getMessage());
+            }
+        });
     }
 }
