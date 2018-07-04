@@ -12,18 +12,20 @@
         android:id="@+id/textEmail"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="7dp"
+        android:layout_marginBottom="45dp"
         android:layout_marginStart="22dp"
+        android:layout_marginTop="92dp"
         android:text="Email"
-        app:layout_constraintBottom_toBottomOf="@+id/editEmail"
+        app:layout_constraintBottom_toTopOf="@+id/textPassword"
         app:layout_constraintEnd_toStartOf="@+id/editEmail"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
         android:id="@+id/editEmail"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="24dp"
+        android:layout_marginBottom="23dp"
         android:layout_marginEnd="5dp"
         android:ems="10"
         android:inputType="textEmailAddress"
@@ -35,12 +37,13 @@
         android:id="@+id/textPassword"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="64dp"
         android:layout_marginEnd="6dp"
-        android:layout_marginTop="156dp"
         android:text="Password"
+        app:layout_constraintBottom_toTopOf="@+id/checkBoxEntrarAuto"
         app:layout_constraintEnd_toStartOf="@+id/editPassword"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/textEmail" />
 
     <EditText
         android:id="@+id/editPassword"
@@ -57,33 +60,34 @@
         android:id="@+id/btnEntrar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="27dp"
         android:layout_marginStart="29dp"
+        android:layout_marginTop="24dp"
         android:onClick="entrar"
         android:text="Entrar"
-        app:layout_constraintBottom_toTopOf="@+id/btnRegistrarse"
-        app:layout_constraintStart_toStartOf="@+id/btnRegistrarse" />
+        app:layout_constraintStart_toStartOf="@+id/btnRegistrarse"
+        app:layout_constraintTop_toBottomOf="@+id/checkBoxEntrarAuto" />
 
     <CheckBox
         android:id="@+id/checkBoxEntrarAuto"
-        android:layout_width="0dp"
+        android:layout_width="215dp"
         android:layout_height="0dp"
-        android:layout_marginBottom="259dp"
+        android:layout_marginBottom="240dp"
         android:duplicateParentState="false"
         android:text="Entrar Automáticamente"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/editPassword"
-        app:layout_constraintStart_toStartOf="@+id/editPassword" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textPassword" />
 
     <Button
         android:id="@+id/btnRegistrarse"
         android:layout_width="149dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="93dp"
+        android:layout_marginTop="27dp"
         android:onClick="registrarse"
         android:text="Registrarse"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnEntrar" />
 
 </android.support.constraint.ConstraintLayout>
