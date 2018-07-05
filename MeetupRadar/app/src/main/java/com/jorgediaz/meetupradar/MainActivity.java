@@ -60,8 +60,7 @@ public class MainActivity extends AppCompatActivity {
                                 fragmentTransaction = true;
                                 break;
                             case R.id.menu_actualizar:
-                                fragment = new FragmentActualizar();
-                                fragmentTransaction = true;
+                                actualizarRadares();
                                 break;
                             case R.id.menu_cerrar_sesion:
                                 cerrarSesion();
@@ -97,5 +96,9 @@ public class MainActivity extends AppCompatActivity {
                 Log.e("logout", "Error: " + fault.getCode() + ": " + fault.getMessage());
             }
         });
+    }
+
+    public void actualizarRadares(){
+
     }
 }

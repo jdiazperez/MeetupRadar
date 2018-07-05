@@ -21,8 +21,17 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.jorgediaz.meetupradar.rest.Event;
+import com.jorgediaz.meetupradar.rest.MeetupService;
+import com.jorgediaz.meetupradar.rest.ResultEventos;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 
 public class FragmentMapa extends Fragment implements OnMapReadyCallback {
@@ -153,6 +162,7 @@ public class FragmentMapa extends Fragment implements OnMapReadyCallback {
                             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
                                     new LatLng(mLastKnownLocation.getLatitude(),
                                             mLastKnownLocation.getLongitude()), DEFAULT_ZOOM));
+                            getEventos();
 
                         } else {
                             Log.e("EjemploMapas", "Current location is null. Using defaults.");
@@ -177,5 +187,34 @@ public class FragmentMapa extends Fragment implements OnMapReadyCallback {
             outState.putParcelable(KEY_LOCATION, mLastKnownLocation);
             super.onSaveInstanceState(outState);
         }
+    }
+
+    private void getEventos() {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("https://api.meetup.com")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        MeetupService service = retrofit.create(MeetupService.class);
+
+        service.getEventos(mLastKnownLocation.getLatitude(), mLastKnownLocation.getLongitude()).enqueue(new Callback<ResultEventos>() {
+            @Override
+            public void onResponse(Call<ResultEventos> call, retrofit2.Response<ResultEventos> response) {
+
+                for (Event item : response.body().getResults()) {
+                    Log.e("evento", item.toString());
+
+                    if (item.getVenue() != null) {
+                        LatLng localizacionEvento = new LatLng(item.getVenue().getLat(), item.getVenue().getLon());
+                        mMap.addMarker(new MarkerOptions().position(localizacionEvento).title(item.getName()));
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResultEventos> call, Throwable t) {
+                Log.e("error", t.getMessage());
+            }
+        });
     }
 }
