@@ -8,6 +8,7 @@ public class Radar {
     private String nombre;
     private double latitud;
     private double longitud;
+    private int radio;
     @MapToProperty(property = "ownerId")
     private String idUsuario;
 
@@ -51,10 +52,19 @@ public class Radar {
         this.longitud = longitud;
     }
 
-    public Radar(String nombre, double latitud, double longitud) {
+    public int getRadio() {
+        return radio;
+    }
+
+    public void setRadio(int radio) {
+        this.radio = radio;
+    }
+
+    public Radar(String nombre, double latitud, double longitud, int radio) {
         this.nombre = nombre;
         this.latitud = latitud;
         this.longitud = longitud;
+        this.radio = radio;
     }
 
     public Radar() {
