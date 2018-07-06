@@ -58,10 +58,12 @@
 
     <Button
         android:id="@+id/btnEntrar"
+        style="@style/Widget.AppCompat.Button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="29dp"
         android:layout_marginTop="24dp"
+        android:backgroundTint="@android:color/holo_green_dark"
         android:onClick="entrar"
         android:text="Entrar"
         app:layout_constraintStart_toStartOf="@+id/btnRegistrarse"

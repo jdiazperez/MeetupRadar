@@ -55,6 +55,10 @@ public class MainActivity extends AppCompatActivity {
                                 fragment = new FragmentMapa();
                                 fragmentTransaction = true;
                                 break;
+                            case R.id.menu_radar_personal:
+                                fragment = new FragmentRadarPersonal();
+                                fragmentTransaction = true;
+                                break;
                             case R.id.menu_radares:
                                 fragment = new FragmentRadares();
                                 fragmentTransaction = true;
@@ -98,7 +102,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    public void actualizarRadares(){
+    public void actualizarRadares() {
 
     }
 }

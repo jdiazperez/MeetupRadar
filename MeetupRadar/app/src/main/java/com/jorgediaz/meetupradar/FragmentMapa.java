@@ -190,6 +190,8 @@ public class FragmentMapa extends Fragment implements OnMapReadyCallback {
     }
 
     private void getEventos() {
+        Log.e("getEventos lat", String.valueOf(mLastKnownLocation.getLatitude()));
+        Log.e("getEventos long", String.valueOf(mLastKnownLocation.getLongitude()));
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://api.meetup.com")
                 .addConverterFactory(GsonConverterFactory.create())
@@ -213,7 +215,7 @@ public class FragmentMapa extends Fragment implements OnMapReadyCallback {
 
             @Override
             public void onFailure(Call<ResultEventos> call, Throwable t) {
-                Log.e("error", t.getMessage());
+                Log.e("errorMsg", t.toString());
             }
         });
     }
