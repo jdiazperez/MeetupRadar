@@ -1,12 +1,12 @@
 package com.jorgediaz.meetupradar;
 
 import android.os.Bundle;
-import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
+import android.widget.Button;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
@@ -24,25 +24,35 @@ public class FragmentRadarPersonal extends Fragment {
 
         view = inflater.inflate(R.layout.fragment_radar_personal, container, false);
 
-        insertarChecksCategorias();
         controlarSeekBarRadio();
+        eventosBotones();
+
 
         return view;
     }
 
-    private void insertarChecksCategorias() {
-        ConstraintLayout constraint = view.findViewById(R.id.constraintRadarPersonal);
-        View textCategorias = constraint.findViewById(R.id.textCategorias);
-        int[] location = new int[2];
-        textCategorias.getLocationInWindow(location);
-        CheckBox checkCategoria = new CheckBox(constraint.getContext());
-        checkCategoria.setX(location[0]);
-        checkCategoria.setY(location[1] + 1);
-        checkCategoria.setText("Prueba 1");
-        CheckBox checkCategoria2 = new CheckBox(constraint.getContext());
-        checkCategoria2.setText("Prueba 2");
-        constraint.addView(checkCategoria);
-        constraint.addView(checkCategoria2);
+    private void eventosBotones() {
+        Button btnCancelar = (Button) view.findViewById(R.id.btnCancelar);
+        btnCancelar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                cargarFragmentMapa();
+            }
+        });
+        Button btnGuardar = (Button) view.findViewById(R.id.btnGuardarRadarPersonal);
+        btnGuardar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                cargarFragmentMapa();
+            }
+        });
+    }
+
+    private void cargarFragmentMapa() {
+        getActivity().getSupportFragmentManager().beginTransaction()
+                .replace(R.id.frame_content, new FragmentMapa())
+                .commit();
+        ((AppCompatActivity) getActivity()).setTitle(getString(R.string.app_name) + ": Mapa");
     }
 
     private void controlarSeekBarRadio() {
@@ -65,5 +75,13 @@ public class FragmentRadarPersonal extends Fragment {
 
             }
         });
+    }
+
+    public void cancelar(View v) {
+
+    }
+
+    public void guardarRadar(View v) {
+
     }
 }

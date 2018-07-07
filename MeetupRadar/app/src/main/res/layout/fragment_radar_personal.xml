@@ -13,35 +13,32 @@
         app:layout_constraintBottom_toTopOf="@+id/textRadioValor"
         app:layout_constraintTop_toTopOf="@+id/textRadioValor">
 
-
-        <TextView
-            android:id="@+id/textCategorias"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="260dp"
-            android:layout_marginStart="32dp"
-            android:layout_marginTop="38dp"
-            android:text="Categorías:"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/seekBarRadio" />
-
         <TextView
             android:id="@+id/textRadio"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="329dp"
             android:layout_marginStart="32dp"
-            android:layout_marginTop="24dp"
+            android:layout_marginTop="40dp"
             android:text="Distancia de Búsqueda:"
             android:textSize="18sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/textRadioValor"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="41dp"
+            android:layout_marginStart="83dp"
+            android:layout_marginTop="40dp"
+            android:text="0 km"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/textRadio"
             app:layout_constraintTop_toTopOf="parent" />
 
         <SeekBar
@@ -58,28 +55,378 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textRadioValor" />
 
+        <View
+            android:id="@+id/separador1"
+            android:layout_width="340dp"
+            android:layout_height="2dip"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="30dp"
+            android:background="#4286f4"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/seekBarRadio" />
+
+
         <TextView
-            android:id="@+id/textRadioValor"
+            android:id="@+id/textCategorias"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="41dp"
-            android:layout_marginStart="83dp"
-            android:layout_marginTop="32dp"
-            android:text="0 km"
+            android:layout_marginEnd="260dp"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="38dp"
+            android:text="Categorías:"
             android:textSize="18sp"
+            android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/textRadio"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/separador1" />
 
         <CheckBox
-            android:id="@+id/checkBox2"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
+            android:id="@+id/checkCategoria1"
+            android:layout_width="349dp"
+            android:layout_height="34dp"
             android:layout_marginStart="24dp"
             android:layout_marginTop="24dp"
-            android:text="CheckBox"
+            android:text="Arte y Cultura"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textCategorias" />
+
+        <CheckBox
+            android:id="@+id/checkCategoria2"
+            android:layout_width="349dp"
+            android:layout_height="34dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="24dp"
+            android:text="Carrera y Negocios"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/checkCategoria1" />
+
+        <CheckBox
+            android:id="@+id/checkCategoria3"
+            android:layout_width="349dp"
+            android:layout_height="34dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="24dp"
+            android:text="Autos y Motos"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/checkCategoria2" />
+
+        <CheckBox
+            android:id="@+id/checkCategoria4"
+            android:layout_width="349dp"
+            android:layout_height="34dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="24dp"
+            android:text="Comunidad y Medioambiente"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/checkCategoria3" />
+
+        <CheckBox
+            android:id="@+id/checkCategoria5"
+            android:layout_width="349dp"
+            android:layout_height="34dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="24dp"
+            android:text="Baile"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/checkCategoria4" />
+
+        <CheckBox
+            android:id="@+id/checkCategoria6"
+            android:layout_width="349dp"
+            android:layout_height="34dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="24dp"
+            android:text="Educación y Formación"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/checkCategoria5" />
+
+        <CheckBox
+            android:id="@+id/checkCategoria8"
+            android:layout_width="349dp"
+            android:layout_height="34dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="24dp"
+            android:text="Moda y Belleza"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/checkCategoria6" />
+
+        <CheckBox
+            android:id="@+id/checkCategoria9"
+            android:layout_width="349dp"
+            android:layout_height="34dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="24dp"
+            android:text="Condición Física"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/checkCategoria8" />
+
+        <CheckBox
+            android:id="@+id/checkCategoria10"
+            android:layout_width="349dp"
+            android:layout_height="34dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="24dp"
+            android:text="Comida y Bebida"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/checkCategoria9" />
+
+        <CheckBox
+            android:id="@+id/checkCategoria11"
+            android:layout_width="349dp"
+            android:layout_height="34dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="24dp"
+            android:text="Juegos"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/checkCategoria10" />
+
+        <CheckBox
+            android:id="@+id/checkCategoria12"
+            android:layout_width="349dp"
+            android:layout_height="34dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="24dp"
+            android:text="LGTB"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/checkCategoria11" />
+
+        <CheckBox
+            android:id="@+id/checkCategoria13"
+            android:layout_width="349dp"
+            android:layout_height="34dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="24dp"
+            android:text="Movimientos y Política"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/checkCategoria12" />
+
+        <CheckBox
+            android:id="@+id/checkCategoria14"
+            android:layout_width="349dp"
+            android:layout_height="34dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="24dp"
+            android:text="Salud y Bienestar"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/checkCategoria13" />
+
+        <CheckBox
+            android:id="@+id/checkCategoria15"
+            android:layout_width="349dp"
+            android:layout_height="34dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="24dp"
+            android:text="Artesanía, Aficiones y Manualidades"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/checkCategoria14" />
+
+        <CheckBox
+            android:id="@+id/checkCategoria16"
+            android:layout_width="349dp"
+            android:layout_height="34dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="24dp"
+            android:text="Idiomas e Identidad Cultural"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/checkCategoria15" />
+
+        <CheckBox
+            android:id="@+id/checkCategoria17"
+            android:layout_width="349dp"
+            android:layout_height="34dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="24dp"
+            android:text="Estilo de Vida"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/checkCategoria16" />
+
+        <CheckBox
+            android:id="@+id/checkCategoria18"
+            android:layout_width="349dp"
+            android:layout_height="34dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="24dp"
+            android:text="Libros"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/checkCategoria17" />
+
+        <CheckBox
+            android:id="@+id/checkCategoria20"
+            android:layout_width="349dp"
+            android:layout_height="34dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="24dp"
+            android:text="Cine y Películas"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/checkCategoria18" />
+
+        <CheckBox
+            android:id="@+id/checkCategoria21"
+            android:layout_width="349dp"
+            android:layout_height="34dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="24dp"
+            android:text="Música"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/checkCategoria20" />
+
+        <CheckBox
+            android:id="@+id/checkCategoria22"
+            android:layout_width="349dp"
+            android:layout_height="34dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="24dp"
+            android:text="New Age y Espiritualidad"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/checkCategoria21" />
+
+        <CheckBox
+            android:id="@+id/checkCategoria23"
+            android:layout_width="349dp"
+            android:layout_height="34dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="24dp"
+            android:text="Naturaleza y Aventura"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/checkCategoria22" />
+
+        <CheckBox
+            android:id="@+id/checkCategoria24"
+            android:layout_width="349dp"
+            android:layout_height="34dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="24dp"
+            android:text="Fenómenos Paranormales"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/checkCategoria23" />
+
+        <CheckBox
+            android:id="@+id/checkCategoria25"
+            android:layout_width="349dp"
+            android:layout_height="34dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="24dp"
+            android:text="Padres y Familia"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/checkCategoria24" />
+
+        <CheckBox
+            android:id="@+id/checkCategoria26"
+            android:layout_width="349dp"
+            android:layout_height="34dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="24dp"
+            android:text="Mascotas y Animales"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/checkCategoria25" />
+
+        <CheckBox
+            android:id="@+id/checkCategoria27"
+            android:layout_width="349dp"
+            android:layout_height="34dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="24dp"
+            android:text="Fotografía"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/checkCategoria26" />
+
+        <CheckBox
+            android:id="@+id/checkCategoria28"
+            android:layout_width="349dp"
+            android:layout_height="34dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="24dp"
+            android:text="Religión y Creencias"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/checkCategoria27" />
+
+        <CheckBox
+            android:id="@+id/checkCategoria30"
+            android:layout_width="349dp"
+            android:layout_height="34dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="24dp"
+            android:text="Personas Solteras"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/checkCategoria28" />
+
+        <CheckBox
+            android:id="@+id/checkCategoria31"
+            android:layout_width="349dp"
+            android:layout_height="34dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="24dp"
+            android:text="Vida Social"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/checkCategoria30" />
+
+        <CheckBox
+            android:id="@+id/checkCategoria32"
+            android:layout_width="349dp"
+            android:layout_height="34dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="24dp"
+            android:text="Deportes y Tiempo Libre"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/checkCategoria31" />
+
+        <CheckBox
+            android:id="@+id/checkCategoria33"
+            android:layout_width="349dp"
+            android:layout_height="34dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="24dp"
+            android:text="Apoyo"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/checkCategoria32" />
+
+        <CheckBox
+            android:id="@+id/checkCategoria36"
+            android:layout_width="349dp"
+            android:layout_height="34dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="24dp"
+            android:text="Escritura"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/checkCategoria33" />
+
+        <View
+            android:id="@+id/separador2"
+            android:layout_width="340dp"
+            android:layout_height="2dip"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="30dp"
+            android:background="#4286f4"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/checkCategoria36" />
+
+        <Button
+            android:id="@+id/btnCancelar"
+            android:layout_width="100dp"
+            android:layout_height="50dp"
+            android:layout_marginBottom="32dp"
+            android:layout_marginStart="80dp"
+            android:layout_marginTop="24dp"
+            android:backgroundTint="@android:color/holo_red_light"
+            android:text="Cancelar"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/separador2" />
+
+        <Button
+            android:id="@+id/btnGuardarRadarPersonal"
+            android:layout_width="100dp"
+            android:layout_height="50dp"
+            android:layout_marginBottom="32dp"
+            android:layout_marginEnd="80dp"
+            android:layout_marginTop="24dp"
+            android:backgroundTint="@android:color/holo_green_light"
+            android:text="Guardar"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/separador2" />
+
     </android.support.constraint.ConstraintLayout>
 
 

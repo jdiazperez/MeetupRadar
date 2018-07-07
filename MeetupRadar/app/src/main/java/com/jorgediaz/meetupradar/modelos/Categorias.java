@@ -32,7 +32,6 @@ public class Categorias {
         categorias.put(22, "New Age y Espiritualidad");
         categorias.put(23, "Naturaleza y Aventura");
         categorias.put(24, "Fenómenos Paranormales");
-        categorias.put(24, "Fenómenos Paranormales");
         categorias.put(25, "Padres y Familia");
         categorias.put(26, "Mascotas y Animales");
         categorias.put(27, "Fotografía");
