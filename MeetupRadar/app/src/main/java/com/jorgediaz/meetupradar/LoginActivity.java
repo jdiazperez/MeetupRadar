@@ -28,7 +28,7 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        
+
         Backendless.setUrl(getString(R.string.SERVER_URL));
         Backendless.initApp(getApplicationContext(), getString(R.string.APPLICATION_ID), getString(R.string.API_KEY));
 

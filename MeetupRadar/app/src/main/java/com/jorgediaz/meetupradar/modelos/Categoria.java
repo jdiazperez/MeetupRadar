@@ -20,11 +20,13 @@ public class Categoria {
         this.nombre = nombre;
     }
 
+
     public Categoria() {
     }
 
     public Categoria(int idMeetup, String nombre) {
         this.idMeetup = idMeetup;
         this.nombre = nombre;
+
     }
 }
