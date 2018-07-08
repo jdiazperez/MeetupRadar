@@ -29,13 +29,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.frame_content, new FragmentMapa())
-                .commit();
-        getSupportActionBar().setTitle(getString(R.string.app_name) + ": Mapa");
-
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         navView = (NavigationView) findViewById(R.id.navview);
+
+        cargarMapaPrimeraVez();
 
         TextView headerEmail = (TextView) navView.getHeaderView(0).findViewById(R.id.headerEmail);
         SharedPreferences sharedPref = getSharedPreferences(
@@ -85,6 +82,15 @@ public class MainActivity extends AppCompatActivity {
                         return true;
                     }
                 });
+    }
+
+    public void cargarMapaPrimeraVez() {
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.frame_content, new FragmentMapa())
+                .commit();
+        getSupportActionBar().setTitle(getString(R.string.app_name) + ": Mapa");
+
+        navView.getMenu().findItem(R.id.menu_mapa).setChecked(true);
     }
 
     public void cerrarSesion() {

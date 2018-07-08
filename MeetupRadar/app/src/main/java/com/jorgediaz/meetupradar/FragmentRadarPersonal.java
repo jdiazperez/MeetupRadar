@@ -3,6 +3,7 @@ package com.jorgediaz.meetupradar;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -233,6 +234,9 @@ public class FragmentRadarPersonal extends Fragment {
     }
 
     private void cargarFragmentMapa() {
+        NavigationView navView = (NavigationView) getActivity().findViewById(R.id.navview);
+        navView.getMenu().findItem(R.id.menu_mapa).setChecked(true);
+        
         getActivity().getSupportFragmentManager().beginTransaction()
                 .replace(R.id.frame_content, new FragmentMapa())
                 .commit();
