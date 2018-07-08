@@ -49,7 +49,6 @@ public class FragmentRadarPersonal extends Fragment {
         obtenerRadarPersonal();
         controlarSeekBarRadio();
         eventosBotones();
-        eventosCheckBoxes();
 
         return view;
     }
@@ -92,7 +91,8 @@ public class FragmentRadarPersonal extends Fragment {
                     if (b) {
                         categoriasSeleccionadas.add(idCategoria);
                     } else {
-                        categoriasSeleccionadas.remove(idCategoria);
+                        Log.e("onCheckedChanged", String.valueOf(categoriasSeleccionadas.indexOf(idCategoria)));
+                        categoriasSeleccionadas.remove((Integer) idCategoria);
                     }
                 }
             });
@@ -141,6 +141,7 @@ public class FragmentRadarPersonal extends Fragment {
 
     private void guardarCategorias() {
         Iterator<Integer> iterator = categoriasSeleccionadas.iterator();
+        Log.e("guardarCategorias", String.valueOf(categoriasSeleccionadas.size()));
         while (iterator.hasNext()) {
             RadarEscuchaCategoria escucha = new RadarEscuchaCategoria(radarPersonal.getObjectId(), iterator.next());
 
@@ -182,8 +183,9 @@ public class FragmentRadarPersonal extends Fragment {
                     while (iterator.hasNext()) {
                         categoriasSeleccionadas.add(iterator.next().getIdCategoria());
                     }
-                    actualizarCheckBoxesEnPantalla();
+                    eliminarCategorias();
                 }
+                actualizarCheckBoxesEnPantalla();
             }
 
             @Override
@@ -202,7 +204,23 @@ public class FragmentRadarPersonal extends Fragment {
             checkBoxCategoria.setChecked(true);
 
         }
+        eventosCheckBoxes();
 
+    }
+
+    private void eliminarCategorias() {
+        String whereClause = "idRadar = '" + radarPersonal.getObjectId() + "'";
+        Backendless.Data.of(RadarEscuchaCategoria.class).remove(whereClause, new AsyncCallback<Integer>() {
+            @Override
+            public void handleResponse(Integer response) {
+                Log.e("eliminarCategorias", "Exito");
+            }
+
+            @Override
+            public void handleFault(BackendlessFault fault) {
+                Log.e("eliminarCategorias", "Error: " + fault.getCode() + ": " + fault.getMessage());
+            }
+        });
     }
 
     private void cargarFragmentMapa() {
