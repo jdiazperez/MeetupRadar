@@ -1,19 +1,16 @@
 package com.jorgediaz.meetupradar.modelos;
 
-import weborb.service.MapToProperty;
-
 public class RadarEscuchaCategoria {
-    @MapToProperty(property = "objectId")
-    private String id;
+    private String objectId;
     private String idRadar;
     private int idCategoria;
 
-    public String getId() {
-        return id;
+    public String getObjectId() {
+        return objectId;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setObjectId(String objectId) {
+        this.objectId = objectId;
     }
 
     public String getIdRadar() {
@@ -38,5 +35,14 @@ public class RadarEscuchaCategoria {
     public RadarEscuchaCategoria(String idRadar, int idCategoria) {
         this.idRadar = idRadar;
         this.idCategoria = idCategoria;
+    }
+
+    @Override
+    public String toString() {
+        return "RadarEscuchaCategoria{" +
+                "objectId='" + objectId + '\'' +
+                ", idRadar='" + idRadar + '\'' +
+                ", idCategoria=" + idCategoria +
+                '}';
     }
 }

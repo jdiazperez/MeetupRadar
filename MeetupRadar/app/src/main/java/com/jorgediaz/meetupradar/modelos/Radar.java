@@ -1,31 +1,18 @@
 package com.jorgediaz.meetupradar.modelos;
 
-import weborb.service.MapToProperty;
-
 public class Radar {
-    @MapToProperty(property = "objectId")
-    private String id;
+    private String objectId;
     private String nombre;
-    private double latitud;
+    private double latidud;
     private double longitud;
     private int radio;
-    @MapToProperty(property = "ownerId")
-    private String idUsuario;
 
-    public String getId() {
-        return id;
+    public String getObjectId() {
+        return objectId;
     }
 
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getIdUsuario() {
-        return idUsuario;
-    }
-
-    public void setIdUsuario(String idUsuario) {
-        this.idUsuario = idUsuario;
+    public void setObjectId(String objectId) {
+        this.objectId = objectId;
     }
 
     public String getNombre() {
@@ -36,12 +23,12 @@ public class Radar {
         this.nombre = nombre;
     }
 
-    public double getLatitud() {
-        return latitud;
+    public double getLatidud() {
+        return latidud;
     }
 
-    public void setLatitud(double latitud) {
-        this.latitud = latitud;
+    public void setLatidud(double latidud) {
+        this.latidud = latidud;
     }
 
     public double getLongitud() {
@@ -60,13 +47,24 @@ public class Radar {
         this.radio = radio;
     }
 
-    public Radar(String nombre, double latitud, double longitud, int radio) {
+    public Radar() {
+    }
+
+    public Radar(String nombre, double latidud, double longitud, int radio) {
         this.nombre = nombre;
-        this.latitud = latitud;
+        this.latidud = latidud;
         this.longitud = longitud;
         this.radio = radio;
     }
 
-    public Radar() {
+    @Override
+    public String toString() {
+        return "Radar{" +
+                "objectId='" + objectId + '\'' +
+                ", nombre='" + nombre + '\'' +
+                ", latidud=" + latidud +
+                ", longitud=" + longitud +
+                ", radio=" + radio +
+                '}';
     }
 }

@@ -2,6 +2,7 @@ package com.jorgediaz.meetupradar.modelos;
 
 public class Categoria {
     private int idMeetup;
+    private int idCheckBox;
     private String nombre;
 
     public int getIdMeetup() {
@@ -10,6 +11,14 @@ public class Categoria {
 
     public void setIdMeetup(int idMeetup) {
         this.idMeetup = idMeetup;
+    }
+
+    public int getIdCheckBox() {
+        return idCheckBox;
+    }
+
+    public void setIdCheckBox(int idCheckBox) {
+        this.idCheckBox = idCheckBox;
     }
 
     public String getNombre() {
@@ -21,12 +30,9 @@ public class Categoria {
     }
 
 
-    public Categoria() {
-    }
-
-    public Categoria(int idMeetup, String nombre) {
+    public Categoria(int idMeetup, int idCheckBox, String nombre) {
         this.idMeetup = idMeetup;
+        this.idCheckBox = idCheckBox;
         this.nombre = nombre;
-
     }
 }
