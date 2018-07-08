@@ -11,6 +11,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.backendless.Backendless;
+import com.backendless.async.callback.AsyncCallback;
+import com.backendless.exceptions.BackendlessFault;
+import com.backendless.persistence.DataQueryBuilder;
+import com.backendless.persistence.local.UserIdStorageFactory;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.places.PlaceDetectionClient;
@@ -24,9 +29,15 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.jorgediaz.meetupradar.modelos.Radar;
+import com.jorgediaz.meetupradar.modelos.RadarEscuchaCategoria;
 import com.jorgediaz.meetupradar.rest.Event;
 import com.jorgediaz.meetupradar.rest.MeetupService;
 import com.jorgediaz.meetupradar.rest.ResultEventos;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -59,6 +70,11 @@ public class FragmentMapa extends Fragment implements OnMapReadyCallback {
     // Key values for storing activity state
     private static final String KEY_CAMERA_POSITION = "camera_position";
     private static final String KEY_LOCATION = "location";
+
+    //Valores RadarPersonal
+    private String userId;
+    private Radar radarPersonal;
+    private List<Integer> categoriasSeleccionadas;
 
     public FragmentMapa() {
         // Required empty public constructor
@@ -162,7 +178,7 @@ public class FragmentMapa extends Fragment implements OnMapReadyCallback {
                             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
                                     new LatLng(mLastKnownLocation.getLatitude(),
                                             mLastKnownLocation.getLongitude()), DEFAULT_ZOOM));
-                            getEventos();
+                            obtenerRadarPersonal();
 
                         } else {
                             Log.e("EjemploMapas", "Current location is null. Using defaults.");
@@ -190,6 +206,7 @@ public class FragmentMapa extends Fragment implements OnMapReadyCallback {
     }
 
     private void getEventos() {
+
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://api.meetup.com")
                 .addConverterFactory(GsonConverterFactory.create())
@@ -197,16 +214,19 @@ public class FragmentMapa extends Fragment implements OnMapReadyCallback {
 
         MeetupService service = retrofit.create(MeetupService.class);
 
-        service.getEventos(mLastKnownLocation.getLatitude(), mLastKnownLocation.getLongitude()).enqueue(new Callback<ResultEventos>() {
+        String queryCategorias = android.text.TextUtils.join(",", categoriasSeleccionadas);
+
+        service.getEventos(queryCategorias, mLastKnownLocation.getLatitude(), mLastKnownLocation.getLongitude(), radarPersonal.getRadio() * 0.621).enqueue(new Callback<ResultEventos>() {
             @Override
             public void onResponse(Call<ResultEventos> call, retrofit2.Response<ResultEventos> response) {
 
-                for (Event item : response.body().getResults()) {
-                    //Log.e("evento", item.toString());
-
-                    if (item.getVenue() != null) {
-                        LatLng localizacionEvento = new LatLng(item.getVenue().getLat(), item.getVenue().getLon());
-                        mMap.addMarker(new MarkerOptions().position(localizacionEvento).title(item.getName()));
+                if (response.body() != null) {
+                    for (Event item : response.body().getResults()) {
+                        Log.e("evento", item.toString());
+                        if (item.getVenue() != null) {
+                            LatLng localizacionEvento = new LatLng(item.getVenue().getLat(), item.getVenue().getLon());
+                            mMap.addMarker(new MarkerOptions().position(localizacionEvento).title(item.getName()));
+                        }
                     }
                 }
             }
@@ -216,5 +236,60 @@ public class FragmentMapa extends Fragment implements OnMapReadyCallback {
                 Log.e("errorMsg", t.toString());
             }
         });
+    }
+
+    private void obtenerRadarPersonal() {
+        userId = UserIdStorageFactory.instance().getStorage().get();
+
+        String whereClause = "nombre = 'personal' and ownerId = '" + userId + "'";
+        Log.e("obtenerRadarPersonal", whereClause);
+        DataQueryBuilder queryBuilder = DataQueryBuilder.create();
+        queryBuilder.setWhereClause(whereClause);
+
+        Backendless.Data.of(Radar.class).find(queryBuilder, new AsyncCallback<List<Radar>>() {
+            @Override
+            public void handleResponse(List<Radar> response) {
+                if (response.size() > 0) {
+                    radarPersonal = response.get(0);
+                    obtenerCategorias();
+                } else {
+                    radarPersonal = new Radar("personal", 0, 0, 0);
+                }
+                Log.e("obtenerRadarPersonal", radarPersonal.toString());
+
+            }
+
+            @Override
+            public void handleFault(BackendlessFault fault) {
+                radarPersonal = new Radar("personal", 0, 0, 0);
+                Log.e("getRadar", "Error: " + fault.getCode() + ": " + fault.getMessage());
+            }
+        });
+    }
+
+    private void obtenerCategorias() {
+        categoriasSeleccionadas = new ArrayList<>();
+        String whereClause = "idRadar = '" + radarPersonal.getObjectId() + "'";
+        DataQueryBuilder queryBuilder = DataQueryBuilder.create();
+        queryBuilder.setWhereClause(whereClause);
+
+        Backendless.Data.of(RadarEscuchaCategoria.class).find(queryBuilder, new AsyncCallback<List<RadarEscuchaCategoria>>() {
+            @Override
+            public void handleResponse(List<RadarEscuchaCategoria> response) {
+                if (response.size() > 0) {
+                    Iterator<RadarEscuchaCategoria> iterator = response.iterator();
+                    while (iterator.hasNext()) {
+                        categoriasSeleccionadas.add(iterator.next().getIdCategoria());
+                    }
+                }
+                getEventos();
+            }
+
+            @Override
+            public void handleFault(BackendlessFault fault) {
+                Log.e("obtenerCategorias", "Error: " + fault.getCode() + ": " + fault.getMessage());
+            }
+        });
+
     }
 }

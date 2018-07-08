@@ -67,7 +67,7 @@ public class Categorias {
         categoriasPorId.put(22, new Categoria(22, R.id.checkCategoria22, "New Age y Espiritualidad"));
         categoriasPorId.put(23, new Categoria(23, R.id.checkCategoria23, "Naturaleza y Aventura"));
         categoriasPorId.put(24, new Categoria(24, R.id.checkCategoria24, "Fenómenos Paranormales"));
-        categoriasPorId.put(5, new Categoria(25, R.id.checkCategoria25, "Padres y Familia"));
+        categoriasPorId.put(25, new Categoria(25, R.id.checkCategoria25, "Padres y Familia"));
         categoriasPorId.put(26, new Categoria(26, R.id.checkCategoria26, "Mascotas y Animales"));
         categoriasPorId.put(27, new Categoria(27, R.id.checkCategoria27, "Fotografía"));
         categoriasPorId.put(28, new Categoria(28, R.id.checkCategoria28, "Religión y Creencias"));

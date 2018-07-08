@@ -55,7 +55,9 @@ public class FragmentRadarPersonal extends Fragment {
 
     private void obtenerRadarPersonal() {
         userId = UserIdStorageFactory.instance().getStorage().get();
+
         String whereClause = "nombre = 'personal' and ownerId = '" + userId + "'";
+        Log.e("obtenerRadarPersonal", whereClause);
         DataQueryBuilder queryBuilder = DataQueryBuilder.create();
         queryBuilder.setWhereClause(whereClause);
 
@@ -90,9 +92,12 @@ public class FragmentRadarPersonal extends Fragment {
                     int idCategoria = categorias.get(compoundButton.getId()).getIdMeetup();
                     if (b) {
                         categoriasSeleccionadas.add(idCategoria);
+                        Log.e("onCheckChange, checked", String.valueOf(idCategoria));
+                        Log.e("onCheckChange, tamArray", String.valueOf(categoriasSeleccionadas.size()));
                     } else {
-                        Log.e("onCheckedChanged", String.valueOf(categoriasSeleccionadas.indexOf(idCategoria)));
                         categoriasSeleccionadas.remove((Integer) idCategoria);
+                        Log.e("onCheckChange, uncheck", String.valueOf(idCategoria));
+                        Log.e("onCheckChange, tamArray", String.valueOf(categoriasSeleccionadas.size()));
                     }
                 }
             });
@@ -140,6 +145,7 @@ public class FragmentRadarPersonal extends Fragment {
     }
 
     private void guardarCategorias() {
+        eliminarCategorias();
         Iterator<Integer> iterator = categoriasSeleccionadas.iterator();
         Log.e("guardarCategorias", String.valueOf(categoriasSeleccionadas.size()));
         while (iterator.hasNext()) {
@@ -148,7 +154,7 @@ public class FragmentRadarPersonal extends Fragment {
             Backendless.Persistence.save(escucha, new AsyncCallback<RadarEscuchaCategoria>() {
                 @Override
                 public void handleResponse(RadarEscuchaCategoria response) {
-                    Log.e("guardarCategoria", "Exito");
+                    Log.e("guardarCategoria, Exito", String.valueOf(response.getIdCategoria()));
                 }
 
                 @Override
@@ -183,7 +189,6 @@ public class FragmentRadarPersonal extends Fragment {
                     while (iterator.hasNext()) {
                         categoriasSeleccionadas.add(iterator.next().getIdCategoria());
                     }
-                    eliminarCategorias();
                 }
                 actualizarCheckBoxesEnPantalla();
             }
