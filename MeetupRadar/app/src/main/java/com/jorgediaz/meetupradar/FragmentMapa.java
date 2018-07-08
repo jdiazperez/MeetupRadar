@@ -1,5 +1,7 @@
 package com.jorgediaz.meetupradar;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
@@ -15,7 +17,6 @@ import com.backendless.Backendless;
 import com.backendless.async.callback.AsyncCallback;
 import com.backendless.exceptions.BackendlessFault;
 import com.backendless.persistence.DataQueryBuilder;
-import com.backendless.persistence.local.UserIdStorageFactory;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.places.PlaceDetectionClient;
@@ -239,7 +240,10 @@ public class FragmentMapa extends Fragment implements OnMapReadyCallback {
     }
 
     private void obtenerRadarPersonal() {
-        userId = UserIdStorageFactory.instance().getStorage().get();
+        //userId = UserIdStorageFactory.instance().getStorage().get();
+        SharedPreferences sharedPref = getContext().getSharedPreferences(
+                getString(R.string.APPLICATION_ID), Context.MODE_PRIVATE);
+        userId = sharedPref.getString("idUsuario", "0");
 
         String whereClause = "nombre = 'personal' and ownerId = '" + userId + "'";
         Log.e("obtenerRadarPersonal", whereClause);

@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.EditText;
 
 import com.backendless.Backendless;
@@ -106,6 +107,7 @@ public class LoginActivity extends AppCompatActivity {
                             getString(R.string.APPLICATION_ID), Context.MODE_PRIVATE);
                     SharedPreferences.Editor editor = sharedPref.edit();
                     editor.putString("emailUsuario", response.getEmail());
+                    editor.putString("idUsuario", response.getObjectId());
                     editor.commit();
 
                     mostrarMainActivity();
@@ -115,7 +117,7 @@ public class LoginActivity extends AppCompatActivity {
                 public void handleFault(BackendlessFault fault) {
                     Snackbar.make(findViewById(R.id.layoutLogin), "No se ha podido iniciar sesión", Snackbar.LENGTH_LONG).show();
                 }
-            }, true);
+            }, ((CheckBox) findViewById(R.id.checkBoxEntrarAuto)).isChecked());
         }
     }
 }

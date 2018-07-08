@@ -64,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
                                 fragmentTransaction = true;
                                 break;
                             case R.id.menu_actualizar:
-                                actualizarRadares();
+                                actualizarEventos();
                                 break;
                             case R.id.menu_cerrar_sesion:
                                 cerrarSesion();
@@ -102,7 +102,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    public void actualizarRadares() {
+    public void actualizarEventos() {
 
     }
 }
