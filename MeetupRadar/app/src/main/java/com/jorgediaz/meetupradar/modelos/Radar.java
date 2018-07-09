@@ -1,6 +1,9 @@
 package com.jorgediaz.meetupradar.modelos;
 
-public class Radar {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class Radar implements Parcelable {
     private String objectId;
     private String nombre;
     private double latidud;
@@ -67,4 +70,47 @@ public class Radar {
                 ", radio=" + radio +
                 '}';
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(objectId);
+        parcel.writeString(nombre);
+        parcel.writeDouble(latidud);
+        parcel.writeDouble(longitud);
+        parcel.writeInt(radio);
+    }
+
+    private void readFromParcel(Parcel in) {
+        this.objectId = in.readString();
+        this.nombre = in.readString();
+        this.latidud = in.readDouble();
+        this.longitud = in.readDouble();
+        this.radio = in.readInt();
+
+    }
+
+    public Radar(Parcel in) {
+        objectId = in.readString();
+        nombre = in.readString();
+        latidud = in.readDouble();
+        longitud = in.readDouble();
+        radio = in.readInt();
+    }
+
+    public static final Creator<Radar> CREATOR = new Creator<Radar>() {
+        @Override
+        public Radar createFromParcel(Parcel in) {
+            return new Radar(in);
+        }
+
+        @Override
+        public Radar[] newArray(int size) {
+            return new Radar[size];
+        }
+    };
 }

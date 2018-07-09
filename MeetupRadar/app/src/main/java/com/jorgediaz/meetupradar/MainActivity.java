@@ -15,11 +15,21 @@ import android.widget.TextView;
 import com.backendless.Backendless;
 import com.backendless.async.callback.AsyncCallback;
 import com.backendless.exceptions.BackendlessFault;
+import com.backendless.persistence.DataQueryBuilder;
+import com.jorgediaz.meetupradar.modelos.Radar;
+import com.jorgediaz.meetupradar.modelos.RadarEscuchaCategoria;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
     private DrawerLayout drawerLayout;
     private NavigationView navView;
+    private String userId;
+    private Radar radarPersonal;
+    private ArrayList<Integer> categoriasSeleccionadas;
 
     public MainActivity() {
     }
@@ -32,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         navView = (NavigationView) findViewById(R.id.navview);
 
-        cargarMapaPrimeraVez();
+        obtenerRadarPersonal();
 
         TextView headerEmail = (TextView) navView.getHeaderView(0).findViewById(R.id.headerEmail);
         SharedPreferences sharedPref = getSharedPreferences(
@@ -109,6 +119,70 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void actualizarEventos() {
+
+    }
+
+    private void obtenerRadarPersonal() {
+        //userId = UserIdStorageFactory.instance().getStorage().get();
+        SharedPreferences sharedPref = getSharedPreferences(
+                getString(R.string.APPLICATION_ID), Context.MODE_PRIVATE);
+        userId = sharedPref.getString("idUsuario", "0");
+
+        String whereClause = "nombre = 'personal' and ownerId = '" + userId + "'";
+        Log.e("obtenerRadarPersonal", whereClause);
+        DataQueryBuilder queryBuilder = DataQueryBuilder.create();
+        queryBuilder.setWhereClause(whereClause);
+
+        Backendless.Data.of(Radar.class).find(queryBuilder, new AsyncCallback<List<Radar>>() {
+            @Override
+            public void handleResponse(List<Radar> response) {
+                if (response.size() > 0) {
+                    radarPersonal = response.get(0);
+                    Log.e("obtenerRadarPersonal", radarPersonal.toString());
+                    obtenerCategorias();
+                } else {
+                    radarPersonal = null;
+                    cargarMapaPrimeraVez();
+                    Log.e("obtenerRadarPersonal", "null");
+                }
+                getIntent().putExtra("radarPersonal", radarPersonal);
+
+            }
+
+            @Override
+            public void handleFault(BackendlessFault fault) {
+                radarPersonal = null;
+                cargarMapaPrimeraVez();
+                Log.e("getRadar", "Error: " + fault.getCode() + ": " + fault.getMessage());
+            }
+        });
+    }
+
+    private void obtenerCategorias() {
+        categoriasSeleccionadas = new ArrayList<>();
+        String whereClause = "idRadar = '" + radarPersonal.getObjectId() + "'";
+        DataQueryBuilder queryBuilder = DataQueryBuilder.create();
+        queryBuilder.setWhereClause(whereClause);
+
+        Backendless.Data.of(RadarEscuchaCategoria.class).find(queryBuilder, new AsyncCallback<List<RadarEscuchaCategoria>>() {
+            @Override
+            public void handleResponse(List<RadarEscuchaCategoria> response) {
+                if (response.size() > 0) {
+                    Iterator<RadarEscuchaCategoria> iterator = response.iterator();
+                    while (iterator.hasNext()) {
+                        categoriasSeleccionadas.add(iterator.next().getIdCategoria());
+                    }
+                }
+                getIntent().putIntegerArrayListExtra("categoriasSeleccionadas", categoriasSeleccionadas);
+                cargarMapaPrimeraVez();
+
+            }
+
+            @Override
+            public void handleFault(BackendlessFault fault) {
+                Log.e("obtenerCategorias", "Error: " + fault.getCode() + ": " + fault.getMessage());
+            }
+        });
 
     }
 }
