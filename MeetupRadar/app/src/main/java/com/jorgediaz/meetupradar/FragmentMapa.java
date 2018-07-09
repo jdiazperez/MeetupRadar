@@ -28,6 +28,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -107,6 +108,8 @@ public class FragmentMapa extends Fragment implements OnMapReadyCallback {
 
         // Turn on the My Location layer and the related control on the map.
         updateLocationUI();
+
+        agregarWindowAdapter();
     }
 
     private void getLocationPermission() {
@@ -253,10 +256,20 @@ public class FragmentMapa extends Fragment implements OnMapReadyCallback {
 
                 @Override
                 public void handleFault(BackendlessFault fault) {
-
+                    Log.e("obtenerEventosDeLaBD", "Error: " + fault.getMessage());
                 }
             });
 
         }
+    }
+
+    private void agregarWindowAdapter() {
+        mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+
+            @Override
+            public void onInfoWindowClick(Marker marker) {
+                Log.e("idMarker", marker.getId());
+            }
+        });
     }
 }
