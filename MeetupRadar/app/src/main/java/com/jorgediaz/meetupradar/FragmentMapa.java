@@ -207,10 +207,12 @@ public class FragmentMapa extends Fragment implements OnMapReadyCallback {
     }
 
     private void getEventos() {
-        if (radarPersonal == null || categoriasSeleccionadas == null) {
-            Log.e("getEventos", "radarPersonal == null");
-            Snackbar.make(view, "Debes configurar el Radar Personal para ver los eventos",
-                    Snackbar.LENGTH_INDEFINITE).show();
+        if (radarPersonal == null) {
+            Snackbar.make(view, "Debes configurar la distancia de búsqueda del Radar Personal",
+                    Snackbar.LENGTH_SHORT).show();
+        } else if (categoriasSeleccionadas == null || categoriasSeleccionadas.size() == 0) {
+            Snackbar.make(view, "Debes configurar las categorías del Radar Personal",
+                    Snackbar.LENGTH_SHORT).show();
         } else {
             Retrofit retrofit = new Retrofit.Builder()
                     .baseUrl("https://api.meetup.com")

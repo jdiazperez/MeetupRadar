@@ -158,7 +158,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void obtenerCategorias() {
-        categoriasSeleccionadas = new ArrayList<>();
         String whereClause = "idRadar = '" + radarPersonal.getObjectId() + "'";
         DataQueryBuilder queryBuilder = DataQueryBuilder.create();
         queryBuilder.setWhereClause(whereClause);
@@ -167,19 +166,20 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void handleResponse(List<RadarEscuchaCategoria> response) {
                 if (response.size() > 0) {
+                    categoriasSeleccionadas = new ArrayList<>();
                     Iterator<RadarEscuchaCategoria> iterator = response.iterator();
                     while (iterator.hasNext()) {
                         categoriasSeleccionadas.add(iterator.next().getIdCategoria());
                     }
+                    getIntent().putIntegerArrayListExtra("categoriasSeleccionadas", categoriasSeleccionadas);
                 }
-                getIntent().putIntegerArrayListExtra("categoriasSeleccionadas", categoriasSeleccionadas);
                 cargarMapaPrimeraVez();
-
             }
 
             @Override
             public void handleFault(BackendlessFault fault) {
                 Log.e("obtenerCategorias", "Error: " + fault.getCode() + ": " + fault.getMessage());
+                cargarMapaPrimeraVez();
             }
         });
 

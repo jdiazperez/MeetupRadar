@@ -1,7 +1,6 @@
 package com.jorgediaz.meetupradar;
 
-import android.content.Context;
-import android.content.SharedPreferences;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -19,7 +18,6 @@ import android.widget.TextView;
 import com.backendless.Backendless;
 import com.backendless.async.callback.AsyncCallback;
 import com.backendless.exceptions.BackendlessFault;
-import com.backendless.persistence.DataQueryBuilder;
 import com.jorgediaz.meetupradar.modelos.Categoria;
 import com.jorgediaz.meetupradar.modelos.Categorias;
 import com.jorgediaz.meetupradar.modelos.Radar;
@@ -27,7 +25,6 @@ import com.jorgediaz.meetupradar.modelos.RadarEscuchaCategoria;
 
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 
 public class FragmentRadarPersonal extends Fragment {
@@ -37,6 +34,7 @@ public class FragmentRadarPersonal extends Fragment {
     private ArrayList<Integer> categoriasSeleccionadas;
     private Radar radarPersonal;
     private String userId;
+    private Intent intent;
 
     public FragmentRadarPersonal() {
         // Required empty public constructor
@@ -47,7 +45,7 @@ public class FragmentRadarPersonal extends Fragment {
                              Bundle savedInstanceState) {
 
         view = inflater.inflate(R.layout.fragment_radar_personal, container, false);
-        categoriasSeleccionadas = new ArrayList<>();
+        //categoriasSeleccionadas = new ArrayList<>();
         obtenerRadarPersonal();
         controlarSeekBarRadio();
         eventosBotones();
@@ -56,35 +54,24 @@ public class FragmentRadarPersonal extends Fragment {
     }
 
     private void obtenerRadarPersonal() {
-        //userId = UserIdStorageFactory.instance().getStorage().get();
-        SharedPreferences sharedPref = getContext().getSharedPreferences(
-                getString(R.string.APPLICATION_ID), Context.MODE_PRIVATE);
-        userId = sharedPref.getString("idUsuario", "0");
-
-        String whereClause = "nombre = 'personal' and ownerId = '" + userId + "'";
-        Log.e("obtenerRadarPersonal", whereClause);
-        DataQueryBuilder queryBuilder = DataQueryBuilder.create();
-        queryBuilder.setWhereClause(whereClause);
-
-        Backendless.Data.of(Radar.class).find(queryBuilder, new AsyncCallback<List<Radar>>() {
-            @Override
-            public void handleResponse(List<Radar> response) {
-                if (response.size() > 0) {
-                    radarPersonal = response.get(0);
-                    actualizarValoresRadarEnPantalla();
-                } else {
-                    radarPersonal = new Radar("personal", 0, 0, 0);
-                }
-                Log.e("obtenerRadarPersonal", radarPersonal.toString());
-
+        intent = getActivity().getIntent();
+        radarPersonal = intent.getParcelableExtra("radarPersonal");
+        if (radarPersonal == null) {
+            Log.e("radarPersonal", "null");
+            radarPersonal = new Radar("personal", 0, 0, 0);
+            categoriasSeleccionadas = new ArrayList<>();
+            eventosCheckBoxes();
+        } else {
+            categoriasSeleccionadas = intent.getIntegerArrayListExtra("categoriasSeleccionadas");
+            if (categoriasSeleccionadas == null) {
+                Log.e("categoriasSeleccionadas", "null");
+                categoriasSeleccionadas = new ArrayList<>();
+                actualizarRadio();
+                eventosCheckBoxes();
+            } else {
+                actualizarValoresRadarEnPantalla();
             }
-
-            @Override
-            public void handleFault(BackendlessFault fault) {
-                radarPersonal = new Radar("personal", 0, 0, 0);
-                Log.e("getRadar", "Error: " + fault.getCode() + ": " + fault.getMessage());
-            }
-        });
+        }
     }
 
     private void eventosCheckBoxes() {
@@ -122,7 +109,6 @@ public class FragmentRadarPersonal extends Fragment {
             @Override
             public void onClick(View v) {
                 guardarRadarPersonal();
-                cargarFragmentMapa();
             }
         });
     }
@@ -136,6 +122,7 @@ public class FragmentRadarPersonal extends Fragment {
             public void handleResponse(Radar response) {
                 Log.e("guardarRadarPersonal 2", "Exito");
                 radarPersonal = response;
+                intent.putExtra("radarPersonal", radarPersonal);
                 Log.e("guardarRadarPersonal 2", radarPersonal.toString());
                 guardarCategorias();
 
@@ -150,7 +137,53 @@ public class FragmentRadarPersonal extends Fragment {
     }
 
     private void guardarCategorias() {
-        eliminarCategorias();
+        intent.putIntegerArrayListExtra("categoriasSeleccionadas", categoriasSeleccionadas);
+        cargarFragmentMapa();
+        eliminarAntiguasCategoriasEnBD();
+    }
+
+    private void actualizarValoresRadarEnPantalla() {
+        actualizarRadio();
+        actualizarCheckBoxesEnPantalla();
+    }
+
+    private void actualizarRadio() {
+        valorRadio = radarPersonal.getRadio();
+        SeekBar seekBar = (SeekBar) view.findViewById(R.id.seekBarRadio);
+        seekBar.setProgress(radarPersonal.getRadio());
+        TextView seekBarValor = (TextView) view.findViewById(R.id.textRadioValor);
+        seekBarValor.setText(String.valueOf(radarPersonal.getRadio()) + " km");
+    }
+
+    private void actualizarCheckBoxesEnPantalla() {
+        Iterator<Integer> iterator = categoriasSeleccionadas.iterator();
+        while (iterator.hasNext()) {
+            Categoria categoria = Categorias.getCategoriaPorId(iterator.next());
+            CheckBox checkBoxCategoria = (CheckBox) view.findViewById(categoria.getIdCheckBox());
+            checkBoxCategoria.setChecked(true);
+
+        }
+        eventosCheckBoxes();
+
+    }
+
+    private void eliminarAntiguasCategoriasEnBD() {
+        String whereClause = "idRadar = '" + radarPersonal.getObjectId() + "'";
+        Backendless.Data.of(RadarEscuchaCategoria.class).remove(whereClause, new AsyncCallback<Integer>() {
+            @Override
+            public void handleResponse(Integer response) {
+                Log.e("eliminarCategorias", "Exito");
+                guardarNuevasCategoriasEnBD();
+            }
+
+            @Override
+            public void handleFault(BackendlessFault fault) {
+                Log.e("eliminarCategorias", "Error: " + fault.getCode() + ": " + fault.getMessage());
+            }
+        });
+    }
+
+    private void guardarNuevasCategoriasEnBD() {
         Iterator<Integer> iterator = categoriasSeleccionadas.iterator();
         Log.e("guardarCategorias", String.valueOf(categoriasSeleccionadas.size()));
         while (iterator.hasNext()) {
@@ -170,73 +203,10 @@ public class FragmentRadarPersonal extends Fragment {
         }
     }
 
-
-    private void actualizarValoresRadarEnPantalla() {
-        valorRadio = radarPersonal.getRadio();
-        SeekBar seekBar = (SeekBar) view.findViewById(R.id.seekBarRadio);
-        seekBar.setProgress(radarPersonal.getRadio());
-        TextView seekBarValor = (TextView) view.findViewById(R.id.textRadioValor);
-        seekBarValor.setText(String.valueOf(radarPersonal.getRadio()) + " km");
-
-        obtenerCategorias();
-    }
-
-    private void obtenerCategorias() {
-        String whereClause = "idRadar = '" + radarPersonal.getObjectId() + "'";
-        DataQueryBuilder queryBuilder = DataQueryBuilder.create();
-        queryBuilder.setWhereClause(whereClause);
-
-        Backendless.Data.of(RadarEscuchaCategoria.class).find(queryBuilder, new AsyncCallback<List<RadarEscuchaCategoria>>() {
-            @Override
-            public void handleResponse(List<RadarEscuchaCategoria> response) {
-                if (response.size() > 0) {
-                    Iterator<RadarEscuchaCategoria> iterator = response.iterator();
-                    while (iterator.hasNext()) {
-                        categoriasSeleccionadas.add(iterator.next().getIdCategoria());
-                    }
-                }
-                actualizarCheckBoxesEnPantalla();
-            }
-
-            @Override
-            public void handleFault(BackendlessFault fault) {
-                Log.e("obtenerCategorias", "Error: " + fault.getCode() + ": " + fault.getMessage());
-            }
-        });
-
-    }
-
-    private void actualizarCheckBoxesEnPantalla() {
-        Iterator<Integer> iterator = categoriasSeleccionadas.iterator();
-        while (iterator.hasNext()) {
-            Categoria categoria = Categorias.getCategoriaPorId(iterator.next());
-            CheckBox checkBoxCategoria = (CheckBox) view.findViewById(categoria.getIdCheckBox());
-            checkBoxCategoria.setChecked(true);
-
-        }
-        eventosCheckBoxes();
-
-    }
-
-    private void eliminarCategorias() {
-        String whereClause = "idRadar = '" + radarPersonal.getObjectId() + "'";
-        Backendless.Data.of(RadarEscuchaCategoria.class).remove(whereClause, new AsyncCallback<Integer>() {
-            @Override
-            public void handleResponse(Integer response) {
-                Log.e("eliminarCategorias", "Exito");
-            }
-
-            @Override
-            public void handleFault(BackendlessFault fault) {
-                Log.e("eliminarCategorias", "Error: " + fault.getCode() + ": " + fault.getMessage());
-            }
-        });
-    }
-
     private void cargarFragmentMapa() {
         NavigationView navView = (NavigationView) getActivity().findViewById(R.id.navview);
         navView.getMenu().findItem(R.id.menu_mapa).setChecked(true);
-        
+
         getActivity().getSupportFragmentManager().beginTransaction()
                 .replace(R.id.frame_content, new FragmentMapa())
                 .commit();
