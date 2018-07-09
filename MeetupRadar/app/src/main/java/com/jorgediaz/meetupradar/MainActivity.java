@@ -218,32 +218,36 @@ public class MainActivity extends AppCompatActivity {
 
             MeetupService service = retrofit.create(MeetupService.class);
 
-            String queryCategorias = android.text.TextUtils.join(",", categoriasSeleccionadas);
+            //String queryCategorias = android.text.TextUtils.join(",", categoriasSeleccionadas);
 
-            service.getEventos(queryCategorias, radarPersonal.getLatidud(), radarPersonal.getLongitud(), radarPersonal.getRadio() * 0.621).enqueue(new Callback<ResultEventos>() {
-                @Override
-                public void onResponse(Call<ResultEventos> call, retrofit2.Response<ResultEventos> response) {
-
-                    if (response.body() != null) {
-                        for (Event item : response.body().getResults()) {
-                            //Log.e("eventoMainActivity", item.toString());
-                            if (item.getVenue() != null) {
-                                comprobarSiEventoYaExiste(item);
+            final Iterator<Integer> iterator = categoriasSeleccionadas.iterator();
+            while (iterator.hasNext()) {
+                final int idCategoria = iterator.next();
+                Log.e("obtenerEvents,categoria", String.valueOf(idCategoria));
+                service.getEventos(String.valueOf(idCategoria), radarPersonal.getLatidud(), radarPersonal.getLongitud(),
+                        radarPersonal.getRadio() * 0.621).enqueue(new Callback<ResultEventos>() {
+                    @Override
+                    public void onResponse(Call<ResultEventos> call, retrofit2.Response<ResultEventos> response) {
+                        if (response.body() != null) {
+                            for (Event item : response.body().getResults()) {
+                                //Log.e("eventoMainActivity", item.toString());
+                                if (item.getVenue() != null) {
+                                    comprobarSiEventoYaExiste(item, idCategoria);
+                                }
                             }
                         }
                     }
-                }
 
-                @Override
-                public void onFailure(Call<ResultEventos> call, Throwable t) {
-                    Log.e("errorMsg", t.toString());
-                }
-            });
-
+                    @Override
+                    public void onFailure(Call<ResultEventos> call, Throwable t) {
+                        Log.e("errorMsg", t.toString());
+                    }
+                });
+            }
         }
     }
 
-    private void comprobarSiEventoYaExiste(final Event eventoRetrofit) {
+    private void comprobarSiEventoYaExiste(final Event eventoRetrofit, final int idCategoria) {
         String whereClause = "ownerId = '" + userId + "' and idMeetup = '" + eventoRetrofit.getId() + "'";
         DataQueryBuilder queryBuilder = DataQueryBuilder.create();
         queryBuilder.setWhereClause(whereClause);
@@ -254,6 +258,7 @@ public class MainActivity extends AppCompatActivity {
                     Direccion dir = new Direccion(eventoRetrofit.getVenue());
                     Grupo grupo = new Grupo(eventoRetrofit.getGroup());
                     Evento evento = new Evento(eventoRetrofit);
+                    evento.setIdCategoria(idCategoria);
                     guardarDireccionEnBD(dir, grupo, evento);
                 }
             }
