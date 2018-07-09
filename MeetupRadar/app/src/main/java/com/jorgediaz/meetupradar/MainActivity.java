@@ -139,19 +139,18 @@ public class MainActivity extends AppCompatActivity {
                 if (response.size() > 0) {
                     radarPersonal = response.get(0);
                     Log.e("obtenerRadarPersonal", radarPersonal.toString());
+                    getIntent().putExtra("radarPersonal", radarPersonal);
                     obtenerCategorias();
                 } else {
-                    radarPersonal = null;
                     cargarMapaPrimeraVez();
                     Log.e("obtenerRadarPersonal", "null");
                 }
-                getIntent().putExtra("radarPersonal", radarPersonal);
+
 
             }
 
             @Override
             public void handleFault(BackendlessFault fault) {
-                radarPersonal = null;
                 cargarMapaPrimeraVez();
                 Log.e("getRadar", "Error: " + fault.getCode() + ": " + fault.getMessage());
             }
