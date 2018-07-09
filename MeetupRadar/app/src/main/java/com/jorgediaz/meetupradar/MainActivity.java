@@ -248,7 +248,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void comprobarSiEventoYaExiste(final Event eventoRetrofit, final int idCategoria) {
-        String whereClause = "ownerId = '" + userId + "' and idMeetup = '" + eventoRetrofit.getId() + "'";
+        String whereClause = "idMeetup = '" + eventoRetrofit.getId() + "'";
         DataQueryBuilder queryBuilder = DataQueryBuilder.create();
         queryBuilder.setWhereClause(whereClause);
         Backendless.Data.of(Evento.class).find(queryBuilder, new AsyncCallback<List<Evento>>() {
@@ -328,7 +328,7 @@ public class MainActivity extends AppCompatActivity {
     public void eliminarEventosExpirados() {
         Date fechaActual = new Date();
         DateFormat sdf = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
-        String whereClause = "ownerId = '" + userId + "' and fechaComienzo < '" + sdf.format(fechaActual) + "'";
+        String whereClause = "fechaComienzo < '" + sdf.format(fechaActual) + "'";
         DataQueryBuilder queryBuilder = DataQueryBuilder.create();
         queryBuilder.setWhereClause(whereClause);
         Log.e("elimEventosExpirados", whereClause);
@@ -367,7 +367,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void eliminarDireccionExpirada(String idDireccion) {
-        String whereClause = "ownerId = '" + userId + "' and objectId = '" + idDireccion + "'";
+        String whereClause = "objectId = '" + idDireccion + "'";
         Backendless.Data.of(Direccion.class).remove(whereClause, new AsyncCallback<Integer>() {
             @Override
             public void handleResponse(Integer response) {
@@ -382,7 +382,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void eliminarGrupoExpirado(String idGrupo) {
-        String whereClause = "ownerId = '" + userId + "' and objectId = '" + idGrupo + "'";
+        String whereClause = "objectId = '" + idGrupo + "'";
         Backendless.Data.of(Grupo.class).remove(whereClause, new AsyncCallback<Integer>() {
             @Override
             public void handleResponse(Integer response) {
