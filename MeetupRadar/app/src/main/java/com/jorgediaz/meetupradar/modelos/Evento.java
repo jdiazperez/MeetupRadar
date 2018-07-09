@@ -18,6 +18,9 @@ public class Evento {
     private Date fechaComienzo;
     private String idDireccion;
     private String idGrupo;
+    private int idCategoria;
+    private double latitud;
+    private double longitud;
 
     public String getObjectId() {
         return objectId;
@@ -113,6 +116,30 @@ public class Evento {
 
     public void setIdGrupo(String idGrupo) {
         this.idGrupo = idGrupo;
+    }
+
+    public int getIdCategoria() {
+        return idCategoria;
+    }
+
+    public void setIdCategoria(int idCategoria) {
+        this.idCategoria = idCategoria;
+    }
+
+    public double getLatitud() {
+        return latitud;
+    }
+
+    public void setLatitud(double latitud) {
+        this.latitud = latitud;
+    }
+
+    public double getLongitud() {
+        return longitud;
+    }
+
+    public void setLongitud(double longitud) {
+        this.longitud = longitud;
     }
 
     public Evento() {

@@ -271,6 +271,8 @@ public class MainActivity extends AppCompatActivity {
             public void handleResponse(Direccion response) {
                 Log.e("guardarDirección", response.getNombre());
                 evento.setIdDireccion(response.getObjectId());
+                evento.setLatitud(response.getLatitud());
+                evento.setLongitud(response.getLongitud());
                 guardarGrupoEnBD(grupo, evento);
             }
 
