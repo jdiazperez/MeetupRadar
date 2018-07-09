@@ -10,10 +10,6 @@
             android:icon="@android:drawable/ic_dialog_alert"
             android:title="Radar Personal" />
         <item
-            android:id="@+id/menu_radares"
-            android:icon="@android:drawable/ic_dialog_alert"
-            android:title="Radares Externos" />
-        <item
             android:id="@+id/menu_actualizar"
             android:icon="@android:drawable/ic_popup_sync"
             android:title="Actualizar" />

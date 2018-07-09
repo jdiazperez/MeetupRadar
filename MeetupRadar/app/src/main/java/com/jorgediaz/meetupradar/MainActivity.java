@@ -81,10 +81,6 @@ public class MainActivity extends AppCompatActivity {
                                 fragment = new FragmentRadarPersonal();
                                 fragmentTransaction = true;
                                 break;
-                            case R.id.menu_radares:
-                                fragment = new FragmentRadares();
-                                fragmentTransaction = true;
-                                break;
                             case R.id.menu_actualizar:
                                 actualizarEventos();
                                 break;
@@ -109,7 +105,7 @@ public class MainActivity extends AppCompatActivity {
                 });
     }
 
-    public void cargarMapaPrimeraVez() {
+    public void cargarMapa() {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.frame_content, new FragmentMapa())
                 .commit();
@@ -153,7 +149,7 @@ public class MainActivity extends AppCompatActivity {
                     getIntent().putExtra("radarPersonal", radarPersonal);
                     obtenerCategorias();
                 } else {
-                    cargarMapaPrimeraVez();
+                    cargarMapa();
                     Log.e("obtenerRadarPersonal", "null");
                 }
 
@@ -162,7 +158,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void handleFault(BackendlessFault fault) {
-                cargarMapaPrimeraVez();
+                cargarMapa();
                 Log.e("getRadar", "Error: " + fault.getCode() + ": " + fault.getMessage());
             }
         });
@@ -184,13 +180,13 @@ public class MainActivity extends AppCompatActivity {
                     }
                     getIntent().putIntegerArrayListExtra("categoriasSeleccionadas", categoriasSeleccionadas);
                 }
-                cargarMapaPrimeraVez();
+                cargarMapa();
             }
 
             @Override
             public void handleFault(BackendlessFault fault) {
                 Log.e("obtenerCategorias", "Error: " + fault.getCode() + ": " + fault.getMessage());
-                cargarMapaPrimeraVez();
+                cargarMapa();
             }
         });
 
