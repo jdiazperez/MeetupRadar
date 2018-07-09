@@ -1,23 +1,21 @@
 package com.jorgediaz.meetupradar.modelos;
 
 
-import weborb.service.MapToProperty;
+import com.jorgediaz.meetupradar.rest.Group;
 
 public class Grupo {
-    @MapToProperty(property = "objectId")
-    private String id;
+    private String objectId;
     private int idMeetup;
     private String nombre;
-    private String urlFoto;
     private String url;
-    private Categoria categoria;
+    private int idCategoria;
 
-    public String getId() {
-        return id;
+    public String getObjectId() {
+        return objectId;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setObjectId(String objectId) {
+        this.objectId = objectId;
     }
 
     public int getIdMeetup() {
@@ -36,14 +34,6 @@ public class Grupo {
         this.nombre = nombre;
     }
 
-    public String getUrlFoto() {
-        return urlFoto;
-    }
-
-    public void setUrlFoto(String urlFoto) {
-        this.urlFoto = urlFoto;
-    }
-
     public String getUrl() {
         return url;
     }
@@ -52,14 +42,21 @@ public class Grupo {
         this.url = url;
     }
 
-    public Categoria getCategoria() {
-        return categoria;
+    public int getIdCategoria() {
+        return idCategoria;
     }
 
-    public void setCategoria(Categoria categoria) {
-        this.categoria = categoria;
+    public void setIdCategoria(int idCategoria) {
+        this.idCategoria = idCategoria;
     }
 
     public Grupo() {
+    }
+
+    public Grupo(Group grupoRetrofit, int idCategoria) {
+        this.idMeetup = grupoRetrofit.getId();
+        this.nombre = grupoRetrofit.getName();
+        this.url = grupoRetrofit.getUrlname();
+        this.idCategoria = idCategoria;
     }
 }

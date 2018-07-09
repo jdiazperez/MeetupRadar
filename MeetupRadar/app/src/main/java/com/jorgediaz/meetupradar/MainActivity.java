@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -16,12 +17,21 @@ import com.backendless.Backendless;
 import com.backendless.async.callback.AsyncCallback;
 import com.backendless.exceptions.BackendlessFault;
 import com.backendless.persistence.DataQueryBuilder;
+import com.google.android.gms.maps.model.LatLng;
 import com.jorgediaz.meetupradar.modelos.Radar;
 import com.jorgediaz.meetupradar.modelos.RadarEscuchaCategoria;
+import com.jorgediaz.meetupradar.rest.Event;
+import com.jorgediaz.meetupradar.rest.MeetupService;
+import com.jorgediaz.meetupradar.rest.ResultEventos;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -118,10 +128,6 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    public void actualizarEventos() {
-
-    }
-
     private void obtenerRadarPersonal() {
         //userId = UserIdStorageFactory.instance().getStorage().get();
         SharedPreferences sharedPref = getSharedPreferences(
@@ -183,5 +189,52 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    public void actualizarEventos() {
+        radarPersonal = getIntent().getParcelableExtra("radarPersonal");
+        categoriasSeleccionadas = getIntent().getIntegerArrayListExtra("categoriasSeleccionadas");
+        getEventos();
+    }
+
+    private void getEventos() {
+        if (radarPersonal == null) {
+            Snackbar.make(drawerLayout, "Debes configurar la distancia de búsqueda del Radar Personal",
+                    Snackbar.LENGTH_SHORT).show();
+        } else if (categoriasSeleccionadas == null || categoriasSeleccionadas.size() == 0) {
+            Snackbar.make(drawerLayout, "Debes configurar las categorías del Radar Personal",
+                    Snackbar.LENGTH_SHORT).show();
+        } else {
+            Retrofit retrofit = new Retrofit.Builder()
+                    .baseUrl("https://api.meetup.com")
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .build();
+
+            MeetupService service = retrofit.create(MeetupService.class);
+
+            String queryCategorias = android.text.TextUtils.join(",", categoriasSeleccionadas);
+
+            service.getEventos(queryCategorias, radarPersonal.getLatidud(), radarPersonal.getLongitud(), radarPersonal.getRadio() * 0.621).enqueue(new Callback<ResultEventos>() {
+                @Override
+                public void onResponse(Call<ResultEventos> call, retrofit2.Response<ResultEventos> response) {
+
+                    if (response.body() != null) {
+                        for (Event item : response.body().getResults()) {
+                            Log.e("evento", item.toString());
+                            if (item.getVenue() != null) {
+                                LatLng localizacionEvento = new LatLng(item.getVenue().getLat(), item.getVenue().getLon());
+                                //mMap.addMarker(new MarkerOptions().position(localizacionEvento).title(item.getName()));
+                            }
+                        }
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<ResultEventos> call, Throwable t) {
+                    Log.e("errorMsg", t.toString());
+                }
+            });
+
+        }
     }
 }

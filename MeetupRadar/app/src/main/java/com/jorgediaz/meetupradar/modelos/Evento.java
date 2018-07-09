@@ -1,39 +1,36 @@
 package com.jorgediaz.meetupradar.modelos;
 
 
-import weborb.service.MapToProperty;
+import com.jorgediaz.meetupradar.rest.Event;
 
 public class Evento {
-    @MapToProperty(property = "objectId")
-    private String id;
-    private int idMeetup;
+    private String objectId;
+    private String idMeetup;
     private String nombre;
     private String descripcion;
     private double distanciaDesdePtoBusqueda;
     private int duracion;
     private String url;
-    private int cuota;
     private int numPersonasApuntadas;
     private String foto;
     private String estado;
     private long horaComienzo;
-    private int maxPersonas;
     private Direccion direccion;
     private Grupo grupo;
 
-    public String getId() {
-        return id;
+    public String getObjectId() {
+        return objectId;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setObjectId(String objectId) {
+        this.objectId = objectId;
     }
 
-    public int getIdMeetup() {
+    public String getIdMeetup() {
         return idMeetup;
     }
 
-    public void setIdMeetup(int idMeetup) {
+    public void setIdMeetup(String idMeetup) {
         this.idMeetup = idMeetup;
     }
 
@@ -77,14 +74,6 @@ public class Evento {
         this.url = url;
     }
 
-    public int getCuota() {
-        return cuota;
-    }
-
-    public void setCuota(int cuota) {
-        this.cuota = cuota;
-    }
-
     public int getNumPersonasApuntadas() {
         return numPersonasApuntadas;
     }
@@ -117,14 +106,6 @@ public class Evento {
         this.horaComienzo = horaComienzo;
     }
 
-    public int getMaxPersonas() {
-        return maxPersonas;
-    }
-
-    public void setMaxPersonas(int maxPersonas) {
-        this.maxPersonas = maxPersonas;
-    }
-
     public Direccion getDireccion() {
         return direccion;
     }
@@ -142,5 +123,20 @@ public class Evento {
     }
 
     public Evento() {
+    }
+
+    public Evento(Event eventoRetrofit, Direccion direccion, Grupo grupo) {
+        this.idMeetup = eventoRetrofit.getId();
+        this.nombre = eventoRetrofit.getName();
+        this.descripcion = eventoRetrofit.getDescription();
+        this.distanciaDesdePtoBusqueda = eventoRetrofit.getDistance();
+        this.duracion = eventoRetrofit.getDuration();
+        this.url = eventoRetrofit.getEventUrl();
+        this.numPersonasApuntadas = eventoRetrofit.getYesRsvpCount();
+        this.foto = eventoRetrofit.getPhotoUrl();
+        this.estado = eventoRetrofit.getStatus();
+        this.horaComienzo = eventoRetrofit.getTime();
+        this.direccion = direccion;
+        this.grupo = grupo;
     }
 }

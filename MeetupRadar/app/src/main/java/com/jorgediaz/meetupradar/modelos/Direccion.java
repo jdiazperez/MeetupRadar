@@ -3,11 +3,8 @@ package com.jorgediaz.meetupradar.modelos;
 
 import com.jorgediaz.meetupradar.rest.Venue;
 
-import weborb.service.MapToProperty;
-
 public class Direccion {
-    @MapToProperty(property = "objectId")
-    private String id;
+    private String objectId;
     private int idMeetup;
     private String calle;
     private String ciudad;
@@ -16,12 +13,12 @@ public class Direccion {
     private double longitud;
     private String nombre;
 
-    public String getId() {
-        return id;
+    public String getObjectId() {
+        return objectId;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setObjectId(String objectId) {
+        this.objectId = objectId;
     }
 
     public int getIdMeetup() {
@@ -83,13 +80,13 @@ public class Direccion {
     public Direccion() {
     }
 
-    public Direccion(Venue venue) {
-        this.idMeetup = venue.getId();
-        this.calle = venue.getAddress1();
-        this.ciudad = venue.getCity();
-        this.pais = venue.getLocalizedCountryName();
-        this.latitud = venue.getLat();
-        this.longitud = venue.getLon();
-        this.nombre = venue.getName();
+    public Direccion(Venue dirRetrofit) {
+        this.idMeetup = dirRetrofit.getId();
+        this.calle = dirRetrofit.getAddress1();
+        this.ciudad = dirRetrofit.getCity();
+        this.pais = dirRetrofit.getLocalizedCountryName();
+        this.latitud = dirRetrofit.getLat();
+        this.longitud = dirRetrofit.getLon();
+        this.nombre = dirRetrofit.getName();
     }
 }

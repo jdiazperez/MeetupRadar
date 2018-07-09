@@ -176,6 +176,13 @@ public class FragmentMapa extends Fragment implements OnMapReadyCallback {
                         if (task.isSuccessful() && task.getResult() != null) {
                             // Set the map's camera position to the current location of the device.
                             mLastKnownLocation = task.getResult();
+
+                            if (radarPersonal != null) {
+                                radarPersonal.setLatidud(mLastKnownLocation.getLatitude());
+                                radarPersonal.setLongitud(mLastKnownLocation.getLongitude());
+                                getActivity().getIntent().putExtra("radarPersonal", radarPersonal);
+                            }
+
                             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
                                     new LatLng(mLastKnownLocation.getLatitude(),
                                             mLastKnownLocation.getLongitude()), DEFAULT_ZOOM));
