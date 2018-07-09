@@ -13,6 +13,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.backendless.Backendless;
+import com.backendless.async.callback.AsyncCallback;
+import com.backendless.exceptions.BackendlessFault;
+import com.backendless.persistence.DataQueryBuilder;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.places.PlaceDetectionClient;
@@ -26,17 +30,11 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.jorgediaz.meetupradar.modelos.Evento;
 import com.jorgediaz.meetupradar.modelos.Radar;
-import com.jorgediaz.meetupradar.rest.Event;
-import com.jorgediaz.meetupradar.rest.MeetupService;
-import com.jorgediaz.meetupradar.rest.ResultEventos;
 
+import java.util.Iterator;
 import java.util.List;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 
 public class FragmentMapa extends Fragment implements OnMapReadyCallback {
@@ -186,7 +184,7 @@ public class FragmentMapa extends Fragment implements OnMapReadyCallback {
                             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
                                     new LatLng(mLastKnownLocation.getLatitude(),
                                             mLastKnownLocation.getLongitude()), DEFAULT_ZOOM));
-                            getEventos();
+                            obtenerEventosDeLaBD();
 
                         } else {
                             Log.e("EjemploMapas", "Current location is null. Using defaults.");
@@ -213,7 +211,7 @@ public class FragmentMapa extends Fragment implements OnMapReadyCallback {
         }
     }
 
-    private void getEventos() {
+    private void obtenerEventosDeLaBD() {
         if (radarPersonal == null) {
             Snackbar.make(view, "Debes configurar la distancia de búsqueda del Radar Personal",
                     Snackbar.LENGTH_SHORT).show();
@@ -221,35 +219,38 @@ public class FragmentMapa extends Fragment implements OnMapReadyCallback {
             Snackbar.make(view, "Debes configurar las categorías del Radar Personal",
                     Snackbar.LENGTH_SHORT).show();
         } else {
-            Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl("https://api.meetup.com")
-                    .addConverterFactory(GsonConverterFactory.create())
-                    .build();
+            Iterator<Integer> iterator = categoriasSeleccionadas.iterator();
+            String whereClause = "";
+            while (iterator.hasNext()) {
+                whereClause += "idCategoria = " + iterator.next() + " or ";
+            }
+            whereClause = whereClause.substring(0, whereClause.length() - 4);
+            DataQueryBuilder queryBuilder = DataQueryBuilder.create();
+            queryBuilder.setWhereClause(whereClause);
 
-            MeetupService service = retrofit.create(MeetupService.class);
-
-            String queryCategorias = android.text.TextUtils.join(",", categoriasSeleccionadas);
-
-            service.getEventos(queryCategorias, mLastKnownLocation.getLatitude(), mLastKnownLocation.getLongitude(), radarPersonal.getRadio() * 0.621).enqueue(new Callback<ResultEventos>() {
+            Backendless.Data.of(Evento.class).find(queryBuilder, new AsyncCallback<List<Evento>>() {
                 @Override
-                public void onResponse(Call<ResultEventos> call, retrofit2.Response<ResultEventos> response) {
+                public void handleResponse(List<Evento> response) {
+                    float[] distanciaEntreEventoYRadar = new float[1];
+                    Iterator<Evento> iterator = response.iterator();
+                    while (iterator.hasNext()) {
+                        Evento evento = iterator.next();
+                        Location.distanceBetween(radarPersonal.getLatidud(), radarPersonal.getLongitud(),
+                                evento.getLatitud(), evento.getLongitud(), distanciaEntreEventoYRadar);
 
-                    if (response.body() != null) {
-                        for (Event item : response.body().getResults()) {
-                            Log.e("evento", item.toString());
-                            if (item.getVenue() != null) {
-                                LatLng localizacionEvento = new LatLng(item.getVenue().getLat(), item.getVenue().getLon());
-                                mMap.addMarker(new MarkerOptions().position(localizacionEvento).title(item.getName()));
-                            }
+                        if (distanciaEntreEventoYRadar[0] < radarPersonal.getRadio() * 1000) {
+                            LatLng localizacionEvento = new LatLng(evento.getLatitud(), evento.getLongitud());
+                            mMap.addMarker(new MarkerOptions().position(localizacionEvento).title(evento.getNombre()));
                         }
                     }
                 }
 
                 @Override
-                public void onFailure(Call<ResultEventos> call, Throwable t) {
-                    Log.e("errorMsg", t.toString());
+                public void handleFault(BackendlessFault fault) {
+
                 }
             });
+
         }
     }
 }
