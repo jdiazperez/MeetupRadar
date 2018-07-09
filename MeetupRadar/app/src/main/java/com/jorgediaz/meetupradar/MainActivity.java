@@ -199,7 +199,7 @@ public class MainActivity extends AppCompatActivity {
     public void actualizarEventos() {
         radarPersonal = getIntent().getParcelableExtra("radarPersonal");
         categoriasSeleccionadas = getIntent().getIntegerArrayListExtra("categoriasSeleccionadas");
-        //eliminarEventosExpirados();
+        eliminarEventosExpirados();
         obtenerEventos();
     }
 
@@ -348,11 +348,43 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void handleResponse(Long response) {
                 Log.e("eliminarEventoExpirado", evento.getNombre());
+                eliminarDireccionExpirada(evento.getIdDireccion());
+                eliminarGrupoExpirado(evento.getIdGrupo());
             }
 
             @Override
             public void handleFault(BackendlessFault fault) {
                 Log.e("eliminarEventoExpirado", "Error: " + fault.getMessage());
+            }
+        });
+    }
+
+    private void eliminarDireccionExpirada(String idDireccion) {
+        String whereClause = "ownerId = '" + userId + "' and objectId = '" + idDireccion + "'";
+        Backendless.Data.of(Direccion.class).remove(whereClause, new AsyncCallback<Integer>() {
+            @Override
+            public void handleResponse(Integer response) {
+                Log.e("eliminarDirExpirada", "true");
+            }
+
+            @Override
+            public void handleFault(BackendlessFault fault) {
+                Log.e("eliminarDirExpirada", "Error: " + fault.getMessage());
+            }
+        });
+    }
+
+    private void eliminarGrupoExpirado(String idGrupo) {
+        String whereClause = "ownerId = '" + userId + "' and objectId = '" + idGrupo + "'";
+        Backendless.Data.of(Grupo.class).remove(whereClause, new AsyncCallback<Integer>() {
+            @Override
+            public void handleResponse(Integer response) {
+                Log.e("eliminarGrupoExpirado", "true");
+            }
+
+            @Override
+            public void handleFault(BackendlessFault fault) {
+                Log.e("eliminarGrupoExpirado", "Error: " + fault.getMessage());
             }
         });
     }
