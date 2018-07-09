@@ -1,5 +1,6 @@
 package com.jorgediaz.meetupradar.modelos;
 
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.jorgediaz.meetupradar.R;
 
 import java.util.HashMap;
@@ -88,5 +89,57 @@ public class Categorias {
 
     public static Categoria getCategoriaPorId(int idCategoria) {
         return categoriasPorId.get(idCategoria);
+    }
+
+    public static float getColorIconoMapa(int idCategoria) {
+        switch (idCategoria) {
+            case 1:
+            case 2:
+            case 3:
+            case 4:
+                return BitmapDescriptorFactory.HUE_AZURE;
+            case 5:
+            case 6:
+            case 7:
+            case 8:
+                return BitmapDescriptorFactory.HUE_CYAN;
+            case 9:
+            case 10:
+            case 11:
+            case 12:
+                return BitmapDescriptorFactory.HUE_GREEN;
+            case 13:
+            case 14:
+            case 15:
+            case 16:
+                return BitmapDescriptorFactory.HUE_MAGENTA;
+            case 17:
+            case 18:
+            case 19:
+            case 20:
+                return BitmapDescriptorFactory.HUE_ORANGE;
+            case 21:
+            case 22:
+            case 23:
+            case 24:
+                return BitmapDescriptorFactory.HUE_RED;
+            case 25:
+            case 26:
+            case 27:
+            case 28:
+                return BitmapDescriptorFactory.HUE_ROSE;
+            case 29:
+            case 30:
+            case 31:
+            case 32:
+                return BitmapDescriptorFactory.HUE_VIOLET;
+            case 33:
+            case 34:
+            case 35:
+            case 36:
+            default:
+                return BitmapDescriptorFactory.HUE_YELLOW;
+        }
+
     }
 }
