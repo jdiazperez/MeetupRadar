@@ -26,7 +26,10 @@ import com.jorgediaz.meetupradar.rest.Event;
 import com.jorgediaz.meetupradar.rest.MeetupService;
 import com.jorgediaz.meetupradar.rest.ResultEventos;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
@@ -196,10 +199,11 @@ public class MainActivity extends AppCompatActivity {
     public void actualizarEventos() {
         radarPersonal = getIntent().getParcelableExtra("radarPersonal");
         categoriasSeleccionadas = getIntent().getIntegerArrayListExtra("categoriasSeleccionadas");
-        getEventos();
+        //eliminarEventosExpirados();
+        obtenerEventos();
     }
 
-    private void getEventos() {
+    private void obtenerEventos() {
         if (radarPersonal == null) {
             Snackbar.make(drawerLayout, "Debes configurar la distancia de búsqueda del Radar Personal",
                     Snackbar.LENGTH_SHORT).show();
@@ -222,12 +226,9 @@ public class MainActivity extends AppCompatActivity {
 
                     if (response.body() != null) {
                         for (Event item : response.body().getResults()) {
-                            Log.e("evento", item.toString());
+                            //Log.e("eventoMainActivity", item.toString());
                             if (item.getVenue() != null) {
-                                Direccion dir = new Direccion(item.getVenue());
-                                Grupo grupo = new Grupo(item.getGroup());
-                                Evento evento = new Evento(item);
-                                guardarDireccionEnBD(dir, grupo, evento);
+                                comprobarSiEventoYaExiste(item);
                             }
                         }
                     }
@@ -240,6 +241,28 @@ public class MainActivity extends AppCompatActivity {
             });
 
         }
+    }
+
+    private void comprobarSiEventoYaExiste(final Event eventoRetrofit) {
+        String whereClause = "ownerId = '" + userId + "' and idMeetup = '" + eventoRetrofit.getId() + "'";
+        DataQueryBuilder queryBuilder = DataQueryBuilder.create();
+        queryBuilder.setWhereClause(whereClause);
+        Backendless.Data.of(Evento.class).find(queryBuilder, new AsyncCallback<List<Evento>>() {
+            @Override
+            public void handleResponse(List<Evento> response) {
+                if (response.size() == 0) {
+                    Direccion dir = new Direccion(eventoRetrofit.getVenue());
+                    Grupo grupo = new Grupo(eventoRetrofit.getGroup());
+                    Evento evento = new Evento(eventoRetrofit);
+                    guardarDireccionEnBD(dir, grupo, evento);
+                }
+            }
+
+            @Override
+            public void handleFault(BackendlessFault fault) {
+                Log.e("getEventosExpirados", "Error: " + fault.getMessage());
+            }
+        });
     }
 
     private void guardarDireccionEnBD(final Direccion direccion, final Grupo grupo, final Evento evento) {
@@ -291,6 +314,45 @@ public class MainActivity extends AppCompatActivity {
             public void handleFault(BackendlessFault fault) {
                 Log.e("guardarEvento", "Error: " + fault.getMessage()
                         + " Evento: " + evento.getNombre());
+            }
+        });
+    }
+
+    public void eliminarEventosExpirados() {
+        Date fechaActual = new Date();
+        DateFormat sdf = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+        String whereClause = "ownerId = '" + userId + "' and fechaComienzo < '" + sdf.format(fechaActual) + "'";
+        DataQueryBuilder queryBuilder = DataQueryBuilder.create();
+        queryBuilder.setWhereClause(whereClause);
+        Log.e("elimEventosExpirados", whereClause);
+
+        Backendless.Data.of(Evento.class).find(queryBuilder, new AsyncCallback<List<Evento>>() {
+            @Override
+            public void handleResponse(List<Evento> response) {
+                Iterator<Evento> iterator = response.iterator();
+                while (iterator.hasNext()) {
+                    eliminarEventoExpirado(iterator.next());
+                }
+            }
+
+            @Override
+            public void handleFault(BackendlessFault fault) {
+                Log.e("getEventosExpirados", "Error: " + fault.getMessage());
+
+            }
+        });
+    }
+
+    private void eliminarEventoExpirado(final Evento evento) {
+        Backendless.Data.of(Evento.class).remove(evento, new AsyncCallback<Long>() {
+            @Override
+            public void handleResponse(Long response) {
+                Log.e("eliminarEventoExpirado", evento.getNombre());
+            }
+
+            @Override
+            public void handleFault(BackendlessFault fault) {
+                Log.e("eliminarEventoExpirado", "Error: " + fault.getMessage());
             }
         });
     }
