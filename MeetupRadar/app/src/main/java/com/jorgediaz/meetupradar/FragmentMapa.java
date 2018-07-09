@@ -67,6 +67,7 @@ public class FragmentMapa extends Fragment implements OnMapReadyCallback {
     private static final String KEY_LOCATION = "location";
 
     //Valores RadarPersonal
+    private Intent intent;
     private Radar radarPersonal;
     private List<Integer> categoriasSeleccionadas;
 
@@ -85,7 +86,7 @@ public class FragmentMapa extends Fragment implements OnMapReadyCallback {
             mCameraPosition = savedInstanceState.getParcelable(KEY_CAMERA_POSITION);
         }
 
-        Intent intent = getActivity().getIntent();
+        intent = getActivity().getIntent();
         radarPersonal = intent.getParcelableExtra("radarPersonal");
         categoriasSeleccionadas = intent.getIntegerArrayListExtra("categoriasSeleccionadas");
 
@@ -245,11 +246,14 @@ public class FragmentMapa extends Fragment implements OnMapReadyCallback {
 
                         if (distanciaEntreEventoYRadar[0] < radarPersonal.getRadio() * 1000) {
                             LatLng localizacionEvento = new LatLng(evento.getLatitud(), evento.getLongitud());
-                            mMap.addMarker(new MarkerOptions()
+
+                            Marker marker = mMap.addMarker(new MarkerOptions()
                                     .position(localizacionEvento)
                                     .title(evento.getNombre())
                                     .snippet("Categoría: " + Categorias.getCategoriaPorId(evento.getIdCategoria()).getNombre())
                                     .icon(BitmapDescriptorFactory.defaultMarker(Categorias.getColorIconoMapa(evento.getIdCategoria()))));
+
+                            intent.putExtra(marker.getId(), evento);
                         }
                     }
                 }
@@ -269,6 +273,12 @@ public class FragmentMapa extends Fragment implements OnMapReadyCallback {
             @Override
             public void onInfoWindowClick(Marker marker) {
                 Log.e("idMarker", marker.getId());
+                intent.putExtra("markerSeleccionado", marker.getId());
+
+                getActivity().getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.frame_content, new FragmentEvento())
+                        .commit();
+
             }
         });
     }
