@@ -17,7 +17,9 @@ import com.backendless.Backendless;
 import com.backendless.async.callback.AsyncCallback;
 import com.backendless.exceptions.BackendlessFault;
 import com.backendless.persistence.DataQueryBuilder;
-import com.google.android.gms.maps.model.LatLng;
+import com.jorgediaz.meetupradar.modelos.Direccion;
+import com.jorgediaz.meetupradar.modelos.Evento;
+import com.jorgediaz.meetupradar.modelos.Grupo;
 import com.jorgediaz.meetupradar.modelos.Radar;
 import com.jorgediaz.meetupradar.modelos.RadarEscuchaCategoria;
 import com.jorgediaz.meetupradar.rest.Event;
@@ -222,8 +224,10 @@ public class MainActivity extends AppCompatActivity {
                         for (Event item : response.body().getResults()) {
                             Log.e("evento", item.toString());
                             if (item.getVenue() != null) {
-                                LatLng localizacionEvento = new LatLng(item.getVenue().getLat(), item.getVenue().getLon());
-                                //mMap.addMarker(new MarkerOptions().position(localizacionEvento).title(item.getName()));
+                                Direccion dir = new Direccion(item.getVenue());
+                                Grupo grupo = new Grupo(item.getGroup());
+                                Evento evento = new Evento(item);
+                                guardarDireccionEnBD(dir, grupo, evento);
                             }
                         }
                     }
@@ -237,4 +241,58 @@ public class MainActivity extends AppCompatActivity {
 
         }
     }
+
+    private void guardarDireccionEnBD(final Direccion direccion, final Grupo grupo, final Evento evento) {
+        Backendless.Persistence.save(direccion, new AsyncCallback<Direccion>() {
+            @Override
+            public void handleResponse(Direccion response) {
+                Log.e("guardarDirección", response.getNombre());
+                evento.setIdDireccion(response.getObjectId());
+                guardarGrupoEnBD(grupo, evento);
+            }
+
+            @Override
+            public void handleFault(BackendlessFault fault) {
+                Log.e("guardarEvento", "Error: " + fault.getMessage()
+                        + " Direccion: " + direccion.getNombre()
+                        + " Grupo: " + grupo.getNombre()
+                        + " Evento: " + evento.getNombre());
+
+            }
+        });
+    }
+
+    private void guardarGrupoEnBD(final Grupo grupo, final Evento evento) {
+        Backendless.Persistence.save(grupo, new AsyncCallback<Grupo>() {
+            @Override
+            public void handleResponse(Grupo response) {
+                Log.e("guardarGrupo", response.getNombre());
+                evento.setIdGrupo(response.getObjectId());
+                guardarEventoEnBD(evento);
+            }
+
+            @Override
+            public void handleFault(BackendlessFault fault) {
+                Log.e("guardarGrupo", "Error: " + fault.getMessage()
+                        + " Grupo: " + grupo.getNombre()
+                        + " Evento: " + evento.getNombre());
+            }
+        });
+    }
+
+    private void guardarEventoEnBD(final Evento evento) {
+        Backendless.Persistence.save(evento, new AsyncCallback<Evento>() {
+            @Override
+            public void handleResponse(Evento response) {
+                Log.e("guardarEvento", response.getNombre());
+            }
+
+            @Override
+            public void handleFault(BackendlessFault fault) {
+                Log.e("guardarEvento", "Error: " + fault.getMessage()
+                        + " Evento: " + evento.getNombre());
+            }
+        });
+    }
+
 }

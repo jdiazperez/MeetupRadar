@@ -3,20 +3,21 @@ package com.jorgediaz.meetupradar.modelos;
 
 import com.jorgediaz.meetupradar.rest.Event;
 
+import java.util.Date;
+
 public class Evento {
     private String objectId;
     private String idMeetup;
     private String nombre;
-    private String descripcion;
     private double distanciaDesdePtoBusqueda;
     private int duracion;
     private String url;
     private int numPersonasApuntadas;
     private String foto;
     private String estado;
-    private long horaComienzo;
-    private Direccion direccion;
-    private Grupo grupo;
+    private Date fechaComienzo;
+    private String idDireccion;
+    private String idGrupo;
 
     public String getObjectId() {
         return objectId;
@@ -40,14 +41,6 @@ public class Evento {
 
     public void setNombre(String nombre) {
         this.nombre = nombre;
-    }
-
-    public String getDescripcion() {
-        return descripcion;
-    }
-
-    public void setDescripcion(String descripcion) {
-        this.descripcion = descripcion;
     }
 
     public double getDistanciaDesdePtoBusqueda() {
@@ -98,45 +91,42 @@ public class Evento {
         this.estado = estado;
     }
 
-    public long getHoraComienzo() {
-        return horaComienzo;
+    public Date getFechaComienzo() {
+        return fechaComienzo;
     }
 
-    public void setHoraComienzo(long horaComienzo) {
-        this.horaComienzo = horaComienzo;
+    public void setFechaComienzo(Date fechaComienzo) {
+        this.fechaComienzo = fechaComienzo;
     }
 
-    public Direccion getDireccion() {
-        return direccion;
+    public String getIdDireccion() {
+        return idDireccion;
     }
 
-    public void setDireccion(Direccion direccion) {
-        this.direccion = direccion;
+    public void setIdDireccion(String idDireccion) {
+        this.idDireccion = idDireccion;
     }
 
-    public Grupo getGrupo() {
-        return grupo;
+    public String getIdGrupo() {
+        return idGrupo;
     }
 
-    public void setGrupo(Grupo grupo) {
-        this.grupo = grupo;
+    public void setIdGrupo(String idGrupo) {
+        this.idGrupo = idGrupo;
     }
 
     public Evento() {
     }
 
-    public Evento(Event eventoRetrofit, Direccion direccion, Grupo grupo) {
+    public Evento(Event eventoRetrofit) {
         this.idMeetup = eventoRetrofit.getId();
         this.nombre = eventoRetrofit.getName();
-        this.descripcion = eventoRetrofit.getDescription();
         this.distanciaDesdePtoBusqueda = eventoRetrofit.getDistance();
         this.duracion = eventoRetrofit.getDuration();
         this.url = eventoRetrofit.getEventUrl();
         this.numPersonasApuntadas = eventoRetrofit.getYesRsvpCount();
         this.foto = eventoRetrofit.getPhotoUrl();
         this.estado = eventoRetrofit.getStatus();
-        this.horaComienzo = eventoRetrofit.getTime();
-        this.direccion = direccion;
-        this.grupo = grupo;
+        this.fechaComienzo = new Date(eventoRetrofit.getTime());
     }
 }

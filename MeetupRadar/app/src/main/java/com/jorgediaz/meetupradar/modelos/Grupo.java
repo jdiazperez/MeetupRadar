@@ -8,7 +8,6 @@ public class Grupo {
     private int idMeetup;
     private String nombre;
     private String url;
-    private int idCategoria;
 
     public String getObjectId() {
         return objectId;
@@ -42,21 +41,12 @@ public class Grupo {
         this.url = url;
     }
 
-    public int getIdCategoria() {
-        return idCategoria;
-    }
-
-    public void setIdCategoria(int idCategoria) {
-        this.idCategoria = idCategoria;
-    }
-
     public Grupo() {
     }
 
-    public Grupo(Group grupoRetrofit, int idCategoria) {
+    public Grupo(Group grupoRetrofit) {
         this.idMeetup = grupoRetrofit.getId();
         this.nombre = grupoRetrofit.getName();
         this.url = grupoRetrofit.getUrlname();
-        this.idCategoria = idCategoria;
     }
 }
