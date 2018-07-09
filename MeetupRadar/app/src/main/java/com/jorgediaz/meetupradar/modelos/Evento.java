@@ -1,11 +1,14 @@
 package com.jorgediaz.meetupradar.modelos;
 
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.jorgediaz.meetupradar.rest.Event;
 
 import java.util.Date;
 
-public class Evento {
+public class Evento implements Parcelable {
     private String objectId;
     private String idMeetup;
     private String nombre;
@@ -21,6 +24,7 @@ public class Evento {
     private int idCategoria;
     private double latitud;
     private double longitud;
+
 
     public String getObjectId() {
         return objectId;
@@ -156,4 +160,58 @@ public class Evento {
         this.estado = eventoRetrofit.getStatus();
         this.fechaComienzo = new Date(eventoRetrofit.getTime());
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(objectId);
+        parcel.writeString(idMeetup);
+        parcel.writeString(nombre);
+        parcel.writeDouble(distanciaDesdePtoBusqueda);
+        parcel.writeInt(duracion);
+        parcel.writeString(url);
+        parcel.writeInt(numPersonasApuntadas);
+        parcel.writeString(foto);
+        parcel.writeString(estado);
+        parcel.writeString(idDireccion);
+        parcel.writeString(idGrupo);
+        parcel.writeInt(idCategoria);
+        parcel.writeDouble(latitud);
+        parcel.writeDouble(longitud);
+    }
+
+    public Evento(Parcel in) {
+        objectId = in.readString();
+        idMeetup = in.readString();
+        nombre = in.readString();
+        distanciaDesdePtoBusqueda = in.readDouble();
+        duracion = in.readInt();
+        url = in.readString();
+        numPersonasApuntadas = in.readInt();
+        foto = in.readString();
+        estado = in.readString();
+        idDireccion = in.readString();
+        idGrupo = in.readString();
+        idCategoria = in.readInt();
+        latitud = in.readDouble();
+        longitud = in.readDouble();
+    }
+
+    public static final Creator<Evento> CREATOR = new Creator<Evento>() {
+        @Override
+        public Evento createFromParcel(Parcel in) {
+            return new Evento(in);
+        }
+
+        @Override
+        public Evento[] newArray(int size) {
+            return new Evento[size];
+        }
+    };
+
+
 }
