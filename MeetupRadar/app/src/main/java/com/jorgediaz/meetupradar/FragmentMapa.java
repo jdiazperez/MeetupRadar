@@ -104,7 +104,6 @@ public class FragmentMapa extends Fragment implements OnMapReadyCallback {
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        Log.e("onMapReady", "onMapReady");
         mMap = googleMap;
 
         // Turn on the My Location layer and the related control on the map.
@@ -272,7 +271,6 @@ public class FragmentMapa extends Fragment implements OnMapReadyCallback {
 
             @Override
             public void onInfoWindowClick(Marker marker) {
-                Log.e("idMarker", marker.getId());
                 intent.putExtra("markerSeleccionado", marker.getId());
 
                 getActivity().getSupportFragmentManager().beginTransaction()

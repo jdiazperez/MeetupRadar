@@ -136,7 +136,6 @@ public class MainActivity extends AppCompatActivity {
         userId = sharedPref.getString("idUsuario", "0");
 
         String whereClause = "nombre = 'personal' and ownerId = '" + userId + "'";
-        Log.e("obtenerRadarPersonal", whereClause);
         DataQueryBuilder queryBuilder = DataQueryBuilder.create();
         queryBuilder.setWhereClause(whereClause);
 
@@ -369,7 +368,7 @@ public class MainActivity extends AppCompatActivity {
         Backendless.Data.of(Grupo.class).remove(whereClause, new AsyncCallback<Integer>() {
             @Override
             public void handleResponse(Integer response) {
-                
+
             }
 
             @Override
