@@ -46,14 +46,13 @@ public class LoginActivity extends AppCompatActivity {
 
                 @Override
                 public void handleFault(BackendlessFault fault) {
-                    Log.e("entrarAuto", "Error: " + fault.getCode() + ": " + fault.getMessage());
+                    Log.e("entrarAuto", "Error: " + fault.getMessage());
                 }
             };
             Backendless.UserService.isValidLogin(isValidLoginCallBack);
         } else {
             getSupportActionBar().setTitle(getString(R.string.app_name) + ": Login");
             setContentView(R.layout.activity_login);
-            Log.e("entrarAuto", "El usertoken no está guardado");
         }
     }
 
@@ -91,7 +90,7 @@ public class LoginActivity extends AppCompatActivity {
         if (TextUtils.isEmpty(email)) {
             editEmail.setError("Debes introducir un correo electrónico");
         } else if (TextUtils.isEmpty(password)) {
-            editPassword.setError("Debes introducir una password");
+            editPassword.setError("Debes introducir una contraseña");
         } else {
             correcto = true;
         }

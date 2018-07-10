@@ -37,7 +37,6 @@ public class FragmentRadarPersonal extends Fragment {
     private Intent intent;
 
     public FragmentRadarPersonal() {
-        // Required empty public constructor
     }
 
     @Override
@@ -45,7 +44,6 @@ public class FragmentRadarPersonal extends Fragment {
                              Bundle savedInstanceState) {
 
         view = inflater.inflate(R.layout.fragment_radar_personal, container, false);
-        //categoriasSeleccionadas = new ArrayList<>();
         obtenerRadarPersonal();
         controlarSeekBarRadio();
         eventosBotones();
@@ -57,14 +55,12 @@ public class FragmentRadarPersonal extends Fragment {
         intent = getActivity().getIntent();
         radarPersonal = intent.getParcelableExtra("radarPersonal");
         if (radarPersonal == null) {
-            Log.e("radarPersonal", "null");
             radarPersonal = new Radar("personal", 0, 0, 0);
             categoriasSeleccionadas = new ArrayList<>();
             eventosCheckBoxes();
         } else {
             categoriasSeleccionadas = intent.getIntegerArrayListExtra("categoriasSeleccionadas");
             if (categoriasSeleccionadas == null) {
-                Log.e("categoriasSeleccionadas", "null");
                 categoriasSeleccionadas = new ArrayList<>();
                 actualizarRadio();
                 eventosCheckBoxes();
@@ -84,12 +80,8 @@ public class FragmentRadarPersonal extends Fragment {
                     int idCategoria = categorias.get(compoundButton.getId()).getIdMeetup();
                     if (b) {
                         categoriasSeleccionadas.add(idCategoria);
-                        Log.e("onCheckChange, checked", String.valueOf(idCategoria));
-                        Log.e("onCheckChange, tamArray", String.valueOf(categoriasSeleccionadas.size()));
                     } else {
                         categoriasSeleccionadas.remove((Integer) idCategoria);
-                        Log.e("onCheckChange, uncheck", String.valueOf(idCategoria));
-                        Log.e("onCheckChange, tamArray", String.valueOf(categoriasSeleccionadas.size()));
                     }
                 }
             });
@@ -115,15 +107,12 @@ public class FragmentRadarPersonal extends Fragment {
 
     private void guardarRadarPersonal() {
         radarPersonal.setRadio(valorRadio);
-        Log.e("guardarRadarPersonal 1", radarPersonal.toString());
 
         Backendless.Persistence.save(radarPersonal, new AsyncCallback<Radar>() {
             @Override
             public void handleResponse(Radar response) {
-                Log.e("guardarRadarPersonal 2", "Exito");
                 radarPersonal = response;
                 intent.putExtra("radarPersonal", radarPersonal);
-                Log.e("guardarRadarPersonal 2", radarPersonal.toString());
                 guardarCategorias();
 
             }
@@ -172,27 +161,24 @@ public class FragmentRadarPersonal extends Fragment {
         Backendless.Data.of(RadarEscuchaCategoria.class).remove(whereClause, new AsyncCallback<Integer>() {
             @Override
             public void handleResponse(Integer response) {
-                Log.e("eliminarCategorias", "Exito");
                 guardarNuevasCategoriasEnBD();
             }
 
             @Override
             public void handleFault(BackendlessFault fault) {
-                Log.e("eliminarCategorias", "Error: " + fault.getCode() + ": " + fault.getMessage());
+                Log.e("eliminarCategorias", "Error: " + fault.getMessage());
             }
         });
     }
 
     private void guardarNuevasCategoriasEnBD() {
         Iterator<Integer> iterator = categoriasSeleccionadas.iterator();
-        Log.e("guardarCategorias", String.valueOf(categoriasSeleccionadas.size()));
         while (iterator.hasNext()) {
             RadarEscuchaCategoria escucha = new RadarEscuchaCategoria(radarPersonal.getObjectId(), iterator.next());
 
             Backendless.Persistence.save(escucha, new AsyncCallback<RadarEscuchaCategoria>() {
                 @Override
                 public void handleResponse(RadarEscuchaCategoria response) {
-                    Log.e("guardarCategoria, Exito", String.valueOf(response.getIdCategoria()));
                 }
 
                 @Override

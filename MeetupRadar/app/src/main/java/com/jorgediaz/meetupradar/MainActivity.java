@@ -124,7 +124,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void handleFault(BackendlessFault fault) {
-                Log.e("logout", "Error: " + fault.getCode() + ": " + fault.getMessage());
+                Log.e("logout", "Error: " + fault.getMessage());
             }
         });
     }
@@ -145,21 +145,17 @@ public class MainActivity extends AppCompatActivity {
             public void handleResponse(List<Radar> response) {
                 if (response.size() > 0) {
                     radarPersonal = response.get(0);
-                    Log.e("obtenerRadarPersonal", radarPersonal.toString());
                     getIntent().putExtra("radarPersonal", radarPersonal);
                     obtenerCategorias();
                 } else {
                     cargarMapa();
-                    Log.e("obtenerRadarPersonal", "null");
                 }
-
-
             }
 
             @Override
             public void handleFault(BackendlessFault fault) {
                 cargarMapa();
-                Log.e("getRadar", "Error: " + fault.getCode() + ": " + fault.getMessage());
+                Log.e("getRadar", "Error: " + fault.getMessage());
             }
         });
     }
@@ -185,7 +181,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void handleFault(BackendlessFault fault) {
-                Log.e("obtenerCategorias", "Error: " + fault.getCode() + ": " + fault.getMessage());
+                Log.e("obtenerCategorias", "Error: " + fault.getMessage());
                 cargarMapa();
             }
         });
@@ -214,19 +210,15 @@ public class MainActivity extends AppCompatActivity {
 
             MeetupService service = retrofit.create(MeetupService.class);
 
-            //String queryCategorias = android.text.TextUtils.join(",", categoriasSeleccionadas);
-
             final Iterator<Integer> iterator = categoriasSeleccionadas.iterator();
             while (iterator.hasNext()) {
                 final int idCategoria = iterator.next();
-                Log.e("obtenerEvents,categoria", String.valueOf(idCategoria));
                 service.getEventos(String.valueOf(idCategoria), radarPersonal.getLatidud(), radarPersonal.getLongitud(),
                         radarPersonal.getRadio() * 0.621).enqueue(new Callback<ResultEventos>() {
                     @Override
                     public void onResponse(Call<ResultEventos> call, retrofit2.Response<ResultEventos> response) {
                         if (response.body() != null) {
                             for (Event item : response.body().getResults()) {
-                                //Log.e("eventoMainActivity", item.toString());
                                 if (item.getVenue() != null) {
                                     comprobarSiEventoYaExiste(item, idCategoria);
                                 }
@@ -270,7 +262,6 @@ public class MainActivity extends AppCompatActivity {
         Backendless.Persistence.save(direccion, new AsyncCallback<Direccion>() {
             @Override
             public void handleResponse(Direccion response) {
-                Log.e("guardarDirección", response.getNombre());
                 evento.setIdDireccion(response.getObjectId());
                 evento.setLatitud(response.getLatitud());
                 evento.setLongitud(response.getLongitud());
@@ -292,7 +283,6 @@ public class MainActivity extends AppCompatActivity {
         Backendless.Persistence.save(grupo, new AsyncCallback<Grupo>() {
             @Override
             public void handleResponse(Grupo response) {
-                Log.e("guardarGrupo", response.getNombre());
                 evento.setIdGrupo(response.getObjectId());
                 guardarEventoEnBD(evento);
             }
@@ -310,7 +300,6 @@ public class MainActivity extends AppCompatActivity {
         Backendless.Persistence.save(evento, new AsyncCallback<Evento>() {
             @Override
             public void handleResponse(Evento response) {
-                Log.e("guardarEvento", response.getNombre());
             }
 
             @Override
@@ -327,7 +316,6 @@ public class MainActivity extends AppCompatActivity {
         String whereClause = "fechaComienzo < '" + sdf.format(fechaActual) + "'";
         DataQueryBuilder queryBuilder = DataQueryBuilder.create();
         queryBuilder.setWhereClause(whereClause);
-        Log.e("elimEventosExpirados", whereClause);
 
         Backendless.Data.of(Evento.class).find(queryBuilder, new AsyncCallback<List<Evento>>() {
             @Override
@@ -350,7 +338,6 @@ public class MainActivity extends AppCompatActivity {
         Backendless.Data.of(Evento.class).remove(evento, new AsyncCallback<Long>() {
             @Override
             public void handleResponse(Long response) {
-                Log.e("eliminarEventoExpirado", evento.getNombre());
                 eliminarDireccionExpirada(evento.getIdDireccion());
                 eliminarGrupoExpirado(evento.getIdGrupo());
             }
@@ -367,7 +354,7 @@ public class MainActivity extends AppCompatActivity {
         Backendless.Data.of(Direccion.class).remove(whereClause, new AsyncCallback<Integer>() {
             @Override
             public void handleResponse(Integer response) {
-                Log.e("eliminarDirExpirada", "true");
+
             }
 
             @Override
@@ -382,7 +369,7 @@ public class MainActivity extends AppCompatActivity {
         Backendless.Data.of(Grupo.class).remove(whereClause, new AsyncCallback<Integer>() {
             @Override
             public void handleResponse(Integer response) {
-                Log.e("eliminarGrupoExpirado", "true");
+                
             }
 
             @Override
